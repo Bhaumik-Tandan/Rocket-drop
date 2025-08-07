@@ -61,15 +61,7 @@ export const SettingsScreen: React.FC = () => {
 
         {/* Game Controls section removed */}
 
-        {/* Game Info Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>ABOUT</Text>
-          <View style={styles.infoCard}>
-            <Text style={styles.infoTitle}>🚀 Space Drop</Text>
-            <Text style={styles.infoText}>A simple, fun space flying game</Text>
-            <Text style={styles.infoText}>Perfect for quick gaming sessions!</Text>
-          </View>
-        </View>
+
       </View>
     </View>
   );
@@ -96,24 +88,29 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   backButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   backButtonText: {
     color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '400',
+    fontSize: 15,
+    fontWeight: '500',
     letterSpacing: 0.5,
   },
   title: {
-    fontSize: 24,
-    fontWeight: '300',
+    fontSize: 26,
+    fontWeight: '400',
     color: '#FFFFFF',
-    marginLeft: 20,
+    marginLeft: 24,
     letterSpacing: 2,
   },
   settingsContainer: {
@@ -133,14 +130,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 16,
+    paddingVertical: 18,
+    paddingHorizontal: 4,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.1)',
+    borderBottomColor: 'rgba(255, 255, 255, 0.08)',
   },
   settingLabel: {
     fontSize: 16,
     color: '#FFFFFF',
-    fontWeight: '400',
+    fontWeight: '500',
   },
   infoCard: {
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
