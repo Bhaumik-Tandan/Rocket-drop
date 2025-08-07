@@ -87,12 +87,10 @@ interface GameplayState {
   obstacles: SpaceObstacle[];
   particles: Particle[];
   score: number;
-  streak?: number;
   timeElapsed: number;
   gameOver: boolean;
   screenShake: Animated.Value;
   gameStartTime: number;
-  streakFlash?: Animated.Value;
   nearMissFlash?: Animated.Value;
   achievement?: string;
 }
@@ -113,13 +111,12 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
     },
     obstacles: [],
     particles: [],
-    score: 0,
-    streak: 0,
-    timeElapsed: 0,
+          score: 0,
+      timeElapsed: 0,
     gameOver: false,
     screenShake: new Animated.Value(0),
     gameStartTime: Date.now(),
-    streakFlash: new Animated.Value(0),
+    
   });
 
   const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
@@ -147,7 +144,7 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
     }
   }, [gameplayState.score, addScore]);
 
-  const initializeGame = () => {
+  const initializeGame = async () => {
     setGameplayState({
       rocket: {
         position: { x: 100, y: height / 2 },
@@ -162,6 +159,8 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
       screenShake: new Animated.Value(0),
       gameStartTime: Date.now(),
     });
+    
+
   };
 
   // Simple Flappy Bird game loop
@@ -282,16 +281,7 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
               // Success haptic feedback
               Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
-              // Streak counting and flash
-              newState.streak = (newState.streak ?? 0) + 1;
-              const streakCount = newState.streak;
-              if (streakCount === 3 || streakCount === 5 || streakCount % 10 === 0) {
-                const flash = gameplayState.streakFlash ?? new Animated.Value(0);
-                Animated.sequence([
-                  Animated.timing(flash, { toValue: 1, duration: 120, useNativeDriver: true }),
-                  Animated.timing(flash, { toValue: 0, duration: 180, useNativeDriver: true }),
-                ]).start();
-              }
+
 
               // Near-miss bonus: within threshold of gap edges
               const gapHeight = obstacle.gapHeight ?? PIPE_GAP;
@@ -545,28 +535,14 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
       {!gameplayState.gameOver && (
         <View style={styles.scoreDisplay}>
           <Text style={styles.scoreText}>{gameplayState.score}</Text>
-          {gameplayState.streak && gameplayState.streak > 2 && (
-            <Text style={styles.comboText}>COMBO: {gameplayState.streak}</Text>
-          )}
-          {gameplayState.achievement && (
+
+          {gameplayState.achievement ? (
             <Text style={styles.achievementText}>{gameplayState.achievement}</Text>
-          )}
+          ) : null}
         </View>
       )}
 
-      {/* Streak flash overlay */}
-      <Animated.View
-        pointerEvents="none"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(255, 215, 0, 0.15)',
-          opacity: gameplayState.streakFlash ?? new Animated.Value(0),
-        }}
-      />
+
       <Animated.View
         pointerEvents="none"
         style={{
@@ -576,7 +552,7 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
           right: 0,
           bottom: 0,
           backgroundColor: 'rgba(0, 255, 255, 0.2)',
-          opacity: gameplayState.nearMissFlash ?? new Animated.Value(0),
+          opacity: gameplayState.nearMissFlash || new Animated.Value(0),
         }}
       />
 

@@ -13,7 +13,7 @@ import { setAudioEnabled } from './src/utils/audio';
 // Suppress expo-av deprecation warning
 const originalWarn = console.warn;
 console.warn = (...args) => {
-  if (args[0] && typeof args[0] === 'string' && args[0].includes('expo-av')) {
+  if (args[0] && typeof args[0] === 'string' && (args[0].includes('expo-av') || args[0].includes('Audio'))) {
     return; // Suppress expo-av deprecation warnings
   }
   originalWarn.apply(console, args);
@@ -27,9 +27,11 @@ export default function App() {
     setAudioEnabled(settings.soundEnabled);
   }, [settings.soundEnabled]);
 
-  const handleStartGame = () => {
+  const handleStartGame = async () => {
     // Start the game session
     setGameMode('playing');
+    
+
     
     // Haptic feedback
     if (settings.hapticsEnabled) {

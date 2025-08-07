@@ -24,17 +24,23 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
     setAudioEnabled(settings.soundEnabled).then(() => setAudioReady(true));
   }, [settings.soundEnabled]);
 
-  const handleQuickPlay = () => {
+  const handleQuickPlay = async () => {
     if (settings.soundEnabled && audioReady) {
-      playClick();
+      // Play click sound with smooth transition
+      await playClick();
+      
+      // Add a small delay for smooth audio transition like Flappy Bird
+      setTimeout(() => {
+        onStartGame();
+      }, 150);
+    } else {
+      // If audio is disabled, start immediately
+      onStartGame();
     }
     
     if (settings.hapticsEnabled) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    
-    // Start game immediately without animation to avoid getting stuck
-    onStartGame();
   };
 
   const handleSettings = () => {
