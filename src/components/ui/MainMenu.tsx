@@ -56,16 +56,16 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
         ))}
       </View>
 
-      {/* Settings Button - Top Right */}
-      <TouchableOpacity style={styles.settingsButton} onPress={handleSettings} activeOpacity={0.7}>
-        <Text style={styles.settingsButtonText}>⚙️</Text>
-      </TouchableOpacity>
-
       {/* Highest Score Display - Top Center */}
       <View style={styles.highScoreContainer}>
         <Text style={styles.highScoreLabel}>HIGHEST</Text>
         <Text style={styles.highScoreValue}>{gameState.stats.bestScore}</Text>
       </View>
+
+      {/* Settings Button - Top Right */}
+      <TouchableOpacity style={styles.settingsButton} onPress={handleSettings} activeOpacity={0.7}>
+        <Text style={styles.settingsButtonText}>⚙️</Text>
+      </TouchableOpacity>
 
       {/* Transparent Black Curtain */}
       <View style={styles.curtainOverlay} />
@@ -79,7 +79,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
       <View style={styles.spaceshipContainer}>
         <View style={[styles.spaceship, { 
           transform: [{ 
-            rotate: '-20deg' 
+            rotate: '20deg' 
           }] 
         }]}>
           {/* Main Body */}
@@ -112,12 +112,16 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
         </View>
       </View>
 
-      {/* Tap to Start - Invisible overlay */}
+      {/* Tap to Start - Full screen overlay */}
       <TouchableOpacity 
         style={styles.tapOverlay} 
         onPress={handleQuickPlay}
         activeOpacity={1}
-      />
+      >
+        <View style={styles.tapOverlayContent}>
+          <Text style={styles.tapOverlayText}>TAP TO START</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -149,7 +153,7 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 10,
+    zIndex: 20,
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.4,
@@ -167,20 +171,26 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     alignItems: 'center',
-    zIndex: 5,
+    zIndex: 15,
   },
   highScoreLabel: {
     color: '#FFFFFF',
-    fontSize: 14,
+    fontSize: 16,
     textAlign: 'center',
-    opacity: 0.8,
+    fontWeight: 'bold',
     marginBottom: 4,
+    textShadowColor: '#000000',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   highScoreValue: {
     color: '#FFD700',
-    fontSize: 36,
+    fontSize: 42,
     fontWeight: 'bold',
     textAlign: 'center',
+    textShadowColor: '#000000',
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 4,
   },
 
   curtainOverlay: {
@@ -368,5 +378,21 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: 'transparent',
     zIndex: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tapOverlayContent: {
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: '#4A90E2',
+  },
+  tapOverlayText: {
+    color: '#FFFFFF',
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 }); 
