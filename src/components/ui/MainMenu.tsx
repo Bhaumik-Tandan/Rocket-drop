@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Audio } from 'expo-av';
@@ -13,15 +13,20 @@ interface MainMenuProps {
 export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
   const { settings, stats, setGameMode } = useGameStore();
   const clickSoundRef = useRef<Audio.Sound | null>(null);
+  const [audioReady, setAudioReady] = useState(false);
 
   useEffect(() => {
     const loadAudio = async () => {
       try {
+        // Pre-load the audio for instant playback
         const { sound } = await Audio.Sound.createAsync(
           require('../../../assets/click.wav'),
           { shouldPlay: false, volume: 0.5 }
         );
+        // Pre-load the sound to reduce delay
+        await sound.loadAsync(require('../../../assets/click.wav'));
         clickSoundRef.current = sound;
+        setAudioReady(true);
       } catch (error) {
         // Audio not available - continue without sound
       }
@@ -33,9 +38,9 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
   }, []);
 
   const handleQuickPlay = () => {
-    // Play click sound
-    if (settings.soundEnabled && clickSoundRef.current) {
-      clickSoundRef.current.replayAsync();
+    // Play click sound (only if audio is ready)
+    if (settings.soundEnabled && audioReady && clickSoundRef.current) {
+      clickSoundRef.current.playAsync();
     }
     
     // Haptic feedback
