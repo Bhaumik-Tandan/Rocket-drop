@@ -398,7 +398,7 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
             ],
           }}
         >
-          {/* Main Spaceship */}
+          {/* Enhanced Spaceship */}
           <View 
             style={[
               styles.spaceship, 
@@ -413,12 +413,32 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
               }
             ]}
           >
-            {/* Spaceship Body */}
+            {/* Main Body */}
             <View style={styles.spaceshipBody}>
-              <View style={styles.spaceshipCockpit} />
-              <View style={styles.spaceshipWings} />
-              <View style={styles.spaceshipEngine} />
-              <View style={styles.spaceshipThrusters} />
+              {/* Cockpit with glow */}
+              <View style={styles.spaceshipCockpit}>
+                <View style={styles.cockpitGlow} />
+                <View style={styles.cockpitWindow} />
+              </View>
+              
+              {/* Wings */}
+              <View style={styles.spaceshipWings}>
+                <View style={styles.wingLeft} />
+                <View style={styles.wingRight} />
+              </View>
+              
+              {/* Engine with thrust effect */}
+              <View style={styles.spaceshipEngine}>
+                <View style={styles.engineGlow} />
+                <View style={styles.thrustEffect} />
+              </View>
+              
+              {/* Side panels */}
+              <View style={styles.sidePanelLeft} />
+              <View style={styles.sidePanelRight} />
+              
+              {/* Nose cone */}
+              <View style={styles.noseCone} />
             </View>
           </View>
 
@@ -552,6 +572,25 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.6,
     shadowRadius: 3,
   },
+  cockpitGlow: {
+    position: 'absolute',
+    top: -2,
+    left: -2,
+    right: -2,
+    bottom: -2,
+    borderRadius: 10,
+    backgroundColor: 'rgba(135, 206, 235, 0.3)',
+  },
+  cockpitWindow: {
+    position: 'absolute',
+    top: 3,
+    left: 3,
+    width: 10,
+    height: 6,
+    borderRadius: 5,
+    backgroundColor: '#FFFFFF',
+    opacity: 0.8,
+  },
   spaceshipWings: {
     position: 'absolute',
     top: ROCKET_SIZE * 0.2,
@@ -560,6 +599,24 @@ const styles = StyleSheet.create({
     height: 8,
     backgroundColor: '#2E5C8A',
     borderRadius: 4,
+  },
+  wingLeft: {
+    position: 'absolute',
+    left: -8,
+    top: 0,
+    width: 8,
+    height: 8,
+    backgroundColor: '#1E3A5F',
+    borderRadius: 2,
+  },
+  wingRight: {
+    position: 'absolute',
+    right: -8,
+    top: 0,
+    width: 8,
+    height: 8,
+    backgroundColor: '#1E3A5F',
+    borderRadius: 2,
   },
   spaceshipEngine: {
     position: 'absolute',
@@ -573,17 +630,52 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 4,
   },
-  spaceshipThrusters: {
+  engineGlow: {
     position: 'absolute',
-    bottom: -10,
-    left: ROCKET_SIZE / 2 - 3,
-    width: 6,
-    height: 8,
-    borderRadius: 3,
+    top: -2,
+    left: -2,
+    right: -2,
+    bottom: -2,
+    borderRadius: 8,
+    backgroundColor: 'rgba(255, 107, 53, 0.4)',
+  },
+  thrustEffect: {
+    position: 'absolute',
+    bottom: -8,
+    left: 2,
+    width: 8,
+    height: 6,
     backgroundColor: '#FFD700',
-    shadowColor: '#FFD700',
-    shadowOpacity: 0.9,
-    shadowRadius: 6,
+    borderRadius: 3,
+    opacity: 0.8,
+  },
+  sidePanelLeft: {
+    position: 'absolute',
+    left: -2,
+    top: ROCKET_SIZE * 0.3,
+    width: 4,
+    height: 12,
+    backgroundColor: '#357ABD',
+    borderRadius: 2,
+  },
+  sidePanelRight: {
+    position: 'absolute',
+    right: -2,
+    top: ROCKET_SIZE * 0.3,
+    width: 4,
+    height: 12,
+    backgroundColor: '#357ABD',
+    borderRadius: 2,
+  },
+  noseCone: {
+    position: 'absolute',
+    top: -4,
+    left: ROCKET_SIZE / 2 - 4,
+    width: 8,
+    height: 8,
+    backgroundColor: '#FFD700',
+    borderRadius: 4,
+    transform: [{ rotate: '45deg' }],
   },
   spaceObstacle: {
     position: 'absolute',
