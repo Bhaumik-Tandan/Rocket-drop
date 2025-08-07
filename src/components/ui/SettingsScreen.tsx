@@ -18,9 +18,7 @@ export const SettingsScreen: React.FC = () => {
     gameStateManager.updateSettings({ soundEnabled: value });
   };
 
-  const toggleMusic = (value: boolean) => {
-    gameStateManager.updateSettings({ musicEnabled: value });
-  };
+  // Background music toggle removed
 
   const toggleHaptics = (value: boolean) => {
     gameStateManager.updateSettings({ hapticsEnabled: value });
@@ -52,15 +50,7 @@ export const SettingsScreen: React.FC = () => {
             />
           </View>
 
-          <View style={styles.settingRow}>
-            <Text style={styles.settingLabel}>Background Music</Text>
-            <Switch
-              value={gameState.settings.musicEnabled}
-              onValueChange={toggleMusic}
-              trackColor={{ false: '#333333', true: '#00D4AA' }}
-              thumbColor={gameState.settings.musicEnabled ? '#FFFFFF' : '#888888'}
-            />
-          </View>
+          {/* Background music switch removed */}
 
           <View style={styles.settingRow}>
             <Text style={styles.settingLabel}>Haptic Feedback</Text>
@@ -73,17 +63,7 @@ export const SettingsScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* Game Controls Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>GAME CONTROLS</Text>
-          <View style={styles.infoCard}>
-            <Text style={styles.infoTitle}>🎮 How to Play</Text>
-            <Text style={styles.infoText}>• Tap anywhere to make spaceship jump</Text>
-            <Text style={styles.infoText}>• Fly through the green gaps</Text>
-            <Text style={styles.infoText}>• Avoid hitting the pipes</Text>
-            <Text style={styles.infoText}>• Get the highest score!</Text>
-          </View>
-        </View>
+        {/* Game Controls section removed */}
 
         {/* Game Info Section */}
         <View style={styles.section}>

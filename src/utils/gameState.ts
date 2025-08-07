@@ -31,9 +31,8 @@ export interface Aircraft {
 
 export interface GameSettings {
   soundEnabled: boolean;
-  musicEnabled: boolean;
   hapticsEnabled: boolean;
-  // Removed difficulty and other complex settings - keeping it simple for free play
+  // Removed music and other complex settings - keeping it simple for free play
 }
 
 export interface GameStats {
@@ -74,14 +73,7 @@ export interface GameState {
 // Initial state
 const initialSettings: GameSettings = {
   soundEnabled: true,
-  musicEnabled: true,
   hapticsEnabled: true,
-  musicEnabled: true,
-  hapticsEnabled: true,
-  graphicsQuality: 'medium',
-  controlSensitivity: 1.0,
-  difficulty: 'normal',
-  autoPause: true,
 };
 
 export const initialGameState: GameState = {
