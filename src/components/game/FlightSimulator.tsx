@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { View, StyleSheet, Dimensions, TouchableOpacity, Animated, Text, TextStyle } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import { Audio } from 'expo-av';
 import { useGameStore } from '../../store/gameStore';
 import { HUD } from '../ui/HUD';
 import { PauseMenu } from '../ui/PauseMenu';
@@ -112,8 +113,42 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
 
   const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
   const lastUpdateRef = useRef<number>(Date.now());
-  
+  const passedSoundRef = useRef<Audio.Sound | null>(null);
+  const clickSoundRef = useRef<Audio.Sound | null>(null);
 
+  // Load audio files
+  useEffect(() => {
+    const loadAudio = async () => {
+      try {
+        await Audio.setAudioModeAsync({
+          allowsRecordingIOS: false,
+          staysActiveInBackground: false,
+          playsInSilentModeIOS: true,
+          shouldDuckAndroid: true,
+        });
+
+        const { sound: clickSound } = await Audio.Sound.createAsync(
+          require('../../../assets/click.wav'),
+          { shouldPlay: false, volume: 0.5 }
+        );
+        clickSoundRef.current = clickSound;
+
+        const { sound: passedSound } = await Audio.Sound.createAsync(
+          require('../../../assets/passed.wav'),
+          { shouldPlay: false, volume: 0.7 }
+        );
+        passedSoundRef.current = passedSound;
+      } catch (error) {
+        // Audio not available - continue without sound
+      }
+    };
+
+    loadAudio();
+    return () => {
+      clickSoundRef.current?.unloadAsync();
+      passedSoundRef.current?.unloadAsync();
+    };
+  }, []);
 
   // Initialize game when starting
   useEffect(() => {
@@ -242,9 +277,12 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
               const velocityMultiplier = Math.min(1 + (newState.score * VELOCITY_INCREASE_PER_SCORE), MAX_VELOCITY_MULTIPLIER);
               const newWorldSpeed = WORLD_SPEED * velocityMultiplier;
               
-                      // Sound feedback removed - using haptics only
-              // Success haptic feedback
-              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                                      // Play passed sound
+                if (settings.soundEnabled && passedSoundRef.current) {
+                  passedSoundRef.current.replayAsync();
+                }
+                // Success haptic feedback
+                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             }
           }
         }
@@ -282,7 +320,10 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
   const jump = () => {
     if (gameplayState.gameOver) return;
     
-    // Sound feedback removed - using haptics only
+    // Play click sound
+    if (settings.soundEnabled && clickSoundRef.current) {
+      clickSoundRef.current.replayAsync();
+    }
     
     // Haptic feedback
     if (settings.hapticsEnabled) {

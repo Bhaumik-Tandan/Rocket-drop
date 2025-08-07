@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import { Audio } from 'expo-av';
 import { useGameStore } from '../../store/gameStore';
 
 const { width, height } = Dimensions.get('window');
@@ -11,8 +12,32 @@ interface MainMenuProps {
 
 export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
   const { settings, stats, setGameMode } = useGameStore();
+  const clickSoundRef = useRef<Audio.Sound | null>(null);
+
+  useEffect(() => {
+    const loadAudio = async () => {
+      try {
+        const { sound } = await Audio.Sound.createAsync(
+          require('../../../assets/click.wav'),
+          { shouldPlay: false, volume: 0.5 }
+        );
+        clickSoundRef.current = sound;
+      } catch (error) {
+        // Audio not available - continue without sound
+      }
+    };
+    loadAudio();
+    return () => {
+      clickSoundRef.current?.unloadAsync();
+    };
+  }, []);
 
   const handleQuickPlay = () => {
+    // Play click sound
+    if (settings.soundEnabled && clickSoundRef.current) {
+      clickSoundRef.current.replayAsync();
+    }
+    
     // Haptic feedback
     if (settings.hapticsEnabled) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
