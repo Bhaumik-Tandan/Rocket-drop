@@ -1,4 +1,4 @@
-import { Audio, InterruptionModeAndroid, InterruptionModeIOS } from 'expo-av';
+import { Audio } from 'expo-audio';
 
 let isInitialized = false;
 let audioEnabled = true;
@@ -11,15 +11,6 @@ async function ensureInitialized() {
   if (isInitialized || isLoading) return;
   isLoading = true;
   try {
-    await Audio.setAudioModeAsync({
-      allowsRecordingIOS: false,
-      staysActiveInBackground: false,
-      playsInSilentModeIOS: true,
-      interruptionModeIOS: InterruptionModeIOS.DoNotMix,
-      shouldDuckAndroid: true,
-      interruptionModeAndroid: InterruptionModeAndroid.DuckOthers,
-      playThroughEarpieceAndroid: false,
-    });
     const click = await Audio.Sound.createAsync(
       require('../../assets/click.wav'),
       { shouldPlay: false, volume: 0.5 }
