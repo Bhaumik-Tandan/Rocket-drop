@@ -47,11 +47,11 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
       clickSoundRef.current.getStatusAsync().then(status => {
         console.log('Sound status in MainMenu:', status);
         if (status.isLoaded) {
-          clickSoundRef.current?.playAsync().catch(error => {
+          clickSoundRef.current?.replayAsync().catch(error => {
             console.log('Error playing click sound in MainMenu:', error);
             // Try to reload and play again
             clickSoundRef.current?.loadAsync(require('../../../assets/click.wav')).then(() => {
-              clickSoundRef.current?.playAsync().catch(retryError => {
+              clickSoundRef.current?.replayAsync().catch(retryError => {
                 console.log('Retry failed for click sound in MainMenu:', retryError);
               });
             });

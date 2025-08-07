@@ -294,7 +294,7 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
               // Play passed sound
               if (settings.soundEnabled && passedSoundRef.current) {
                 console.log('Playing passed sound');
-                passedSoundRef.current.playAsync().catch(error => {
+                passedSoundRef.current.replayAsync().catch(error => {
                   console.log('Error playing passed sound:', error);
                 });
               } else {
@@ -342,7 +342,7 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
     // Play click sound
     if (settings.soundEnabled && clickSoundRef.current) {
       console.log('Playing click sound in FlightSimulator');
-      clickSoundRef.current.playAsync().catch(error => {
+      clickSoundRef.current.replayAsync().catch(error => {
         console.log('Error playing click sound in FlightSimulator:', error);
       });
     } else {
