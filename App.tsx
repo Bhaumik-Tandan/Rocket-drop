@@ -86,7 +86,17 @@ export default function App() {
                 }}
               >
                 <Text style={styles.premiumButtonText}>🚀 PLAY AGAIN</Text>
-            </TouchableOpacity>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={[styles.premiumButton, styles.secondaryButton]} 
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  gameStateManager.setGameMode('menu');
+                }}
+              >
+                <Text style={styles.premiumButtonText}>🏠 MAIN MENU</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -203,5 +213,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     letterSpacing: 0.5,
+  },
+  secondaryButton: {
+    backgroundColor: '#6C757D',
+    borderColor: '#495057',
+    marginTop: 12,
   },
 }); 
