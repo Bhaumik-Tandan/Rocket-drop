@@ -517,10 +517,12 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
         </Animated.View>
       </Animated.View>
 
-      {/* Simple Score Display */}
-      <View style={styles.scoreDisplay}>
-        <Text style={styles.scoreText}>{gameplayState.score}</Text>
-      </View>
+      {/* Simple Score Display (hidden when game over overlay is visible) */}
+      {!gameplayState.gameOver && (
+        <View style={styles.scoreDisplay}>
+          <Text style={styles.scoreText}>{gameplayState.score}</Text>
+        </View>
+      )}
 
       {/* Streak flash overlay */}
       <Animated.View
@@ -541,12 +543,31 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
       {/* Pause Menu */}
       <PauseMenu />
 
-      {/* Touch Controls - TAP TO JUMP */}
-      <TouchableOpacity 
-        style={styles.fullScreenTouch} 
-        onPress={jump}
-        activeOpacity={1}
-      />
+      {/* Touch Controls - TAP TO JUMP disabled after game over */}
+      {!gameplayState.gameOver && (
+        <TouchableOpacity 
+          style={styles.fullScreenTouch} 
+          onPress={jump}
+          activeOpacity={1}
+        />
+      )}
+
+      {/* Game Over Overlay - in-game, centered */}
+      {gameplayState.gameOver && (
+        <View style={styles.gameOverOverlay}>
+          <View style={styles.gameOverCard}>
+            <Text style={styles.gameOverTitle}>GAME OVER</Text>
+            <Text style={styles.gameOverSubtitle}>Flight Report</Text>
+            <View style={styles.gameOverStatsRow}>
+              <View style={styles.gameOverStat}><Text style={styles.gameOverStatNum}>{gameplayState.score}</Text><Text style={styles.gameOverStatLbl}>SCORE</Text></View>
+              <View style={styles.gameOverStat}><Text style={styles.gameOverStatNum}>{Math.round(gameplayState.timeElapsed / 1000)}s</Text><Text style={styles.gameOverStatLbl}>TIME</Text></View>
+            </View>
+            <TouchableOpacity style={styles.gameOverBtnPrimary} onPress={() => onGameOver(gameplayState.score, gameplayState.timeElapsed)}>
+              <Text style={styles.gameOverBtnText}>TAP TO CONTINUE</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -798,8 +819,83 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    zIndex: 1000,
+    zIndex: 50,
     backgroundColor: 'transparent',
+  },
+
+  gameOverOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 60,
+  },
+  gameOverCard: {
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.12)',
+    paddingVertical: 24,
+    paddingHorizontal: 28,
+    borderRadius: 16,
+    alignItems: 'center',
+    minWidth: 260,
+  },
+  gameOverTitle: {
+    color: '#FFFFFF',
+    fontSize: 22,
+    fontWeight: '600',
+    letterSpacing: 2,
+    marginBottom: 6,
+  },
+  gameOverSubtitle: {
+    color: '#A0AEC0',
+    fontSize: 13,
+    marginBottom: 16,
+  },
+  gameOverStatsRow: {
+    flexDirection: 'row',
+    columnGap: 12,
+    marginBottom: 16,
+  },
+  gameOverStat: {
+    backgroundColor: 'rgba(255,215,0,0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,215,0,0.25)',
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    alignItems: 'center',
+  },
+  gameOverStatNum: {
+    color: '#FFD700',
+    fontSize: 20,
+    fontWeight: '700',
+  },
+  gameOverStatLbl: {
+    color: '#FFD700',
+    fontSize: 10,
+    opacity: 0.9,
+    marginTop: 2,
+    letterSpacing: 1,
+  },
+  gameOverBtnPrimary: {
+    marginTop: 4,
+    backgroundColor: 'rgba(74,144,226,0.25)',
+    borderWidth: 1,
+    borderColor: 'rgba(74,144,226,0.5)',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+  },
+  gameOverBtnText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
+    letterSpacing: 1,
   },
 
 

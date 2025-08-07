@@ -21,9 +21,8 @@ export default function App() {
   } = useGameStore();
 
   const handleGameOver = (score: number, time: number) => {
+    // Persist run stats; keep rendering the game so we can show an in-game Game Over overlay
     endSession();
-    // Go directly to main menu instead of showing modal
-    setGameMode('menu');
   };
 
   const handleStartGame = () => {
