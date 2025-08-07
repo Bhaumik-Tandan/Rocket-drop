@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Audio } from 'expo-av';
-import { gameStateManager, GameState } from '../../utils/gameState';
+import { useGameStore } from '../../store/gameStore';
 
 const { width, height } = Dimensions.get('window');
 
@@ -11,13 +11,8 @@ interface MainMenuProps {
 }
 
 export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
-  const [gameState, setGameState] = useState<GameState>(() => gameStateManager.getState());
+  const { settings, stats, setGameMode } = useGameStore();
   const clickSoundRef = useRef<Audio.Sound | null>(null);
-
-  useEffect(() => {
-    const unsubscribe = gameStateManager.subscribe(setGameState);
-    return unsubscribe;
-  }, []);
 
   useEffect(() => {
     const loadAudio = async () => {
@@ -39,12 +34,12 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
 
   const handleQuickPlay = () => {
     // Play click sound
-    if (gameState.settings.soundEnabled && clickSoundRef.current) {
+    if (settings.soundEnabled && clickSoundRef.current) {
       clickSoundRef.current.replayAsync();
     }
     
     // Haptic feedback
-    if (gameState.settings.hapticsEnabled) {
+    if (settings.hapticsEnabled) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
     
@@ -56,10 +51,10 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
 
 
   const handleSettings = () => {
-    if (gameState.settings.hapticsEnabled) {
+    if (settings.hapticsEnabled) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    gameStateManager.setGameMode('settings');
+    setGameMode('settings');
   };
 
 
@@ -86,7 +81,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
       {/* Highest Score Display - Top Center */}
       <View style={styles.highScoreContainer}>
         <Text style={styles.highScoreLabel}>HIGHEST</Text>
-        <Text style={styles.highScoreValue}>{gameState.stats.bestScore}</Text>
+        <Text style={styles.highScoreValue}>{stats.bestScore}</Text>
       </View>
 
       {/* Settings Button - Top Right */}
@@ -100,6 +95,12 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
       {/* Tap Anywhere Text */}
       <View style={styles.tapAnywhereContainer}>
         <Text style={styles.tapAnywhereText}>TAP ANYWHERE TO PLAY</Text>
+      </View>
+
+      {/* Game Title */}
+      <View style={styles.titleContainer}>
+        <Text style={styles.gameTitle}>SPACE DROP</Text>
+        <Text style={styles.gameSubtitle}>Free Play Adventure</Text>
       </View>
 
       {/* Detailed Spaceship - Like in game */}
@@ -401,5 +402,31 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: 'transparent',
     zIndex: 15,
+  },
+  titleContainer: {
+    position: 'absolute',
+    top: height * 0.15,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  gameTitle: {
+    fontSize: 48,
+    fontWeight: 'bold',
+    color: '#FFD700',
+    textAlign: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 4,
+    letterSpacing: 2,
+    marginBottom: 8,
+  },
+  gameSubtitle: {
+    fontSize: 16,
+    color: '#FFFFFF',
+    textAlign: 'center',
+    opacity: 0.8,
+    letterSpacing: 1,
   },
 }); 

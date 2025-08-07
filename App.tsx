@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Text, TouchableOpacity, Modal } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { gameStateManager, GameState } from './src/utils/gameState';
+import { useGameStore } from './src/store/gameStore';
 import { MainMenu } from './src/components/ui/MainMenu';
 import { PauseMenu } from './src/components/ui/PauseMenu';
 import { SettingsScreen } from './src/components/ui/SettingsScreen';
@@ -10,24 +10,26 @@ import { SettingsScreen } from './src/components/ui/SettingsScreen';
 import { FlightSimulator } from './src/components/game/FlightSimulator';
 
 export default function App() {
-  const [gameState, setGameState] = useState<GameState>(() => gameStateManager.getState());
-
-  // Subscribe to game state changes
-  useEffect(() => {
-    const unsubscribe = gameStateManager.subscribe(setGameState);
-    return unsubscribe;
-  }, []);
+  const { 
+    gameMode, 
+    sessionScore, 
+    sessionTime, 
+    sessionDistance, 
+    startSession, 
+    endSession, 
+    setGameMode 
+  } = useGameStore();
 
   const handleGameOver = (score: number, time: number) => {
-    gameStateManager.endSession();
+    endSession();
   };
 
   const handleStartGame = () => {
-    gameStateManager.startSession();
+    startSession();
   };
 
   // Render based on game mode
-  if (gameState.gameMode === 'menu') {
+  if (gameMode === 'menu') {
     return (
       <View style={styles.container}>
         <StatusBar style="light" />
@@ -36,7 +38,7 @@ export default function App() {
     );
   }
 
-  if (gameState.gameMode === 'settings') {
+  if (gameMode === 'settings') {
     return (
       <View style={styles.container}>
         <StatusBar style="light" />
@@ -49,7 +51,7 @@ export default function App() {
 
 
 
-  if (gameState.gameMode === 'gameOver') {
+  if (gameMode === 'gameOver') {
     return (
       <View style={styles.container}>
         <StatusBar style="light" />
@@ -62,17 +64,17 @@ export default function App() {
             
             <View style={styles.statsContainer}>
               <View style={styles.statCard}>
-                <Text style={styles.statNumber}>{gameState.sessionScore}</Text>
+                <Text style={styles.statNumber}>{sessionScore}</Text>
                 <Text style={styles.statLabel}>SCORE</Text>
               </View>
               
               <View style={styles.statCard}>
-                <Text style={styles.statNumber}>{Math.round(gameState.sessionTime / 1000)}s</Text>
+                                  <Text style={styles.statNumber}>{Math.round(sessionTime / 1000)}s</Text>
                 <Text style={styles.statLabel}>TIME</Text>
               </View>
               
               <View style={styles.statCard}>
-                <Text style={styles.statNumber}>{Math.floor(gameState.sessionDistance)}</Text>
+                                  <Text style={styles.statNumber}>{Math.floor(sessionDistance)}</Text>
                 <Text style={styles.statLabel}>DISTANCE</Text>
               </View>
             </View>
@@ -82,7 +84,7 @@ export default function App() {
                 style={styles.premiumButton} 
                 onPress={() => {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-                  gameStateManager.setGameMode('playing');
+                  setGameMode('playing');
                 }}
               >
                 <Text style={styles.premiumButtonText}>🚀 PLAY AGAIN</Text>
@@ -92,7 +94,7 @@ export default function App() {
                 style={[styles.premiumButton, styles.secondaryButton]} 
                 onPress={() => {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                  gameStateManager.setGameMode('menu');
+                  setGameMode('menu');
                 }}
               >
                 <Text style={styles.premiumButtonText}>🏠 MAIN MENU</Text>

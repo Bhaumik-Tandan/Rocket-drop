@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { View, StyleSheet, Dimensions, TouchableOpacity, Animated, Text, TextStyle } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Audio } from 'expo-av';
-import { gameStateManager, GameState, Aircraft } from '../../utils/gameState';
+import { useGameStore } from '../../store/gameStore';
 import { HUD } from '../ui/HUD';
 import { PauseMenu } from '../ui/PauseMenu';
 
@@ -95,7 +95,7 @@ interface FlightSimulatorProps {
 export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
   onGameOver,
 }) => {
-  const [gameState, setGameState] = useState<GameState>(() => gameStateManager.getState());
+  const { settings, addScore, setGameMode, setPaused } = useGameStore();
   const [gameplayState, setGameplayState] = useState<GameplayState>({
     rocket: {
       position: { x: 100, y: height / 2 },
@@ -119,10 +119,7 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
   const passedSoundRef = useRef<Audio.Sound | null>(null);
 
   // Subscribe to game state changes
-  useEffect(() => {
-    const unsubscribe = gameStateManager.subscribe(setGameState);
-    return unsubscribe;
-  }, []);
+
 
   // Load audio files
   useEffect(() => {
@@ -160,20 +157,18 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
 
   // Initialize game when starting
   useEffect(() => {
-    if (gameState.gameMode === 'playing') {
-      initializeGame();
-    }
+    initializeGame();
     return () => {
       if (gameLoopRef.current) clearInterval(gameLoopRef.current);
     };
-  }, [gameState.gameMode]);
+  }, []);
 
   const initializeGame = () => {
     setGameplayState({
       rocket: {
         position: { x: 100, y: height / 2 },
-        velocity: { x: 0, y: 0 },
-        rotation: 0,
+        velocity: { x: 0, y: JUMP_POWER }, // Start with upward movement
+        rotation: -0.3, // Slight upward tilt
       },
       obstacles: [],
       particles: [],
@@ -187,7 +182,7 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
 
   // Simple Flappy Bird game loop
   const gameLoop = useCallback(() => {
-    if (!gameStateManager.getState().isPaused && gameStateManager.getState().gameMode === 'playing') {
+            if (!gameplayState.gameOver) {
       const now = Date.now();
       lastUpdateRef.current = now;
 
@@ -259,7 +254,7 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
         // Update distance traveled for infinite feel
         const distanceTraveled = currentWorldSpeed * 0.1; // Convert pixels to distance units
         newState.timeElapsed = Date.now() - newState.gameStartTime;
-        gameStateManager.addDistance(distanceTraveled);
+        // Distance tracking handled by Zustand store
         
         // Check space obstacle collisions - more forgiving hitbox
         for (let obstacle of newState.obstacles) {
@@ -281,16 +276,16 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
             obstacle.passed = true;
             if (!obstacle.isTop) { // Only count once per pair
               newState.score++;
-              gameStateManager.addScore(1);
+              addScore(1);
               
               // Increase velocity based on score
               const velocityMultiplier = Math.min(1 + (newState.score * VELOCITY_INCREASE_PER_SCORE), MAX_VELOCITY_MULTIPLIER);
               const newWorldSpeed = WORLD_SPEED * velocityMultiplier;
               
               // Play passed sound
-              if (gameState.settings.soundEnabled && passedSoundRef.current) {
-                passedSoundRef.current.replayAsync();
-              }
+                      if (settings.soundEnabled && passedSoundRef.current) {
+          passedSoundRef.current.replayAsync();
+        }
               // Success haptic feedback
               Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             }
@@ -320,25 +315,23 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
 
   // Set up game loop
   useEffect(() => {
-    if (gameState.gameMode === 'playing' && !gameState.isPaused) {
-      const interval = setInterval(() => {
-        gameLoop();
-      }, 16); // ~60 FPS
-      
-      return () => clearInterval(interval);
-    }
-  }, [gameState.gameMode, gameState.isPaused, gameLoop]);
+    const interval = setInterval(() => {
+      gameLoop();
+    }, 16); // ~60 FPS
+    
+    return () => clearInterval(interval);
+  }, [gameLoop]);
 
   const jump = () => {
-    if (gameState.gameMode !== 'playing' || gameState.isPaused || gameplayState.gameOver) return;
+    if (gameplayState.gameOver) return;
     
     // Play click sound
-    if (gameState.settings.soundEnabled && clickSoundRef.current) {
+    if (settings.soundEnabled && clickSoundRef.current) {
       clickSoundRef.current.replayAsync();
     }
     
     // Haptic feedback
-    if (gameState.settings.hapticsEnabled) {
+    if (settings.hapticsEnabled) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
     
@@ -355,9 +348,7 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
   };
 
   const handleDoubleTap = () => {
-    if (gameState.gameMode === 'playing') {
-      gameStateManager.setPaused(!gameState.isPaused);
-    }
+    setPaused(!gameplayState.gameOver);
   };
 
   const triggerScreenShake = () => {
