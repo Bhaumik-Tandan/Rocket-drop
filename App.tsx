@@ -56,19 +56,19 @@ export default function App() {
         <View style={styles.modalContainer}>
           <View style={styles.premiumModal}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>MISSION COMPLETE</Text>
-              <Text style={styles.modalSubtitle}>Space Explorer Report</Text>
+              <Text style={styles.modalTitle}>GAME OVER</Text>
+              <Text style={styles.modalSubtitle}>Flight Report</Text>
             </View>
             
             <View style={styles.statsContainer}>
               <View style={styles.statCard}>
                 <Text style={styles.statNumber}>{gameState.sessionScore}</Text>
-                <Text style={styles.statLabel}>SECTORS CLEARED</Text>
+                <Text style={styles.statLabel}>SCORE</Text>
               </View>
               
               <View style={styles.statCard}>
                 <Text style={styles.statNumber}>{Math.round(gameState.sessionTime / 1000)}s</Text>
-                <Text style={styles.statLabel}>MISSION TIME</Text>
+                <Text style={styles.statLabel}>TIME</Text>
               </View>
               
               <View style={styles.statCard}>
@@ -82,10 +82,10 @@ export default function App() {
                 style={styles.premiumButton} 
                 onPress={() => {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-                  gameStateManager.setGameMode('menu');
+                  gameStateManager.setGameMode('playing');
                 }}
               >
-                <Text style={styles.premiumButtonText}>🚀 NEW MISSION</Text>
+                <Text style={styles.premiumButtonText}>🚀 PLAY AGAIN</Text>
             </TouchableOpacity>
             </View>
           </View>
