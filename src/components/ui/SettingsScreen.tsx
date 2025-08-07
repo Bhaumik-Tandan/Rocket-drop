@@ -73,13 +73,25 @@ export const SettingsScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* Simple Info Section */}
+        {/* Game Controls Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>GAME INFO</Text>
+          <Text style={styles.sectionTitle}>GAME CONTROLS</Text>
           <View style={styles.infoCard}>
-            <Text style={styles.infoTitle}>🚀 Space Drop - Free Play</Text>
-            <Text style={styles.infoText}>Tap to fly through the gaps!</Text>
-            <Text style={styles.infoText}>Avoid the green pipes and get the highest score!</Text>
+            <Text style={styles.infoTitle}>🎮 How to Play</Text>
+            <Text style={styles.infoText}>• Tap anywhere to make spaceship jump</Text>
+            <Text style={styles.infoText}>• Fly through the green gaps</Text>
+            <Text style={styles.infoText}>• Avoid hitting the pipes</Text>
+            <Text style={styles.infoText}>• Get the highest score!</Text>
+          </View>
+        </View>
+
+        {/* Game Info Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>ABOUT</Text>
+          <View style={styles.infoCard}>
+            <Text style={styles.infoTitle}>🚀 Space Drop</Text>
+            <Text style={styles.infoText}>A simple, fun space flying game</Text>
+            <Text style={styles.infoText}>Perfect for quick gaming sessions!</Text>
           </View>
         </View>
       </View>

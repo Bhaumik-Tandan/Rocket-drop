@@ -15,6 +15,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
   const [buttonScale] = useState(new Animated.Value(0.9));
   const [statsOpacity] = useState(new Animated.Value(0));
   const [backgroundAnim] = useState(new Animated.Value(0));
+  const [showGameOverlay, setShowGameOverlay] = useState(false);
 
   useEffect(() => {
     const unsubscribe = gameStateManager.subscribe(setGameState);
@@ -82,11 +83,23 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
       }),
     ]).start();
 
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    if (gameState.settings.hapticsEnabled) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
     
     setTimeout(() => {
       onStartGame();
     }, 150);
+  };
+
+  const handleQuickPlay = () => {
+    if (gameState.settings.hapticsEnabled) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    setShowGameOverlay(true);
+    setTimeout(() => {
+      onStartGame();
+    }, 300);
   };
 
 
@@ -94,7 +107,9 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
 
 
   const handleSettings = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    if (gameState.settings.hapticsEnabled) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
     gameStateManager.setGameMode('settings');
   };
 
@@ -142,8 +157,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
       </Animated.View>
 
       <Animated.View style={[styles.menuContainer, { transform: [{ scale: buttonScale }] }]}>
-        <TouchableOpacity style={styles.playButton} onPress={handleStartGame} activeOpacity={0.8}>
-          <Text style={styles.playButtonText}>🚀 START FLYING</Text>
+        <TouchableOpacity style={styles.playButton} onPress={handleQuickPlay} activeOpacity={0.8}>
+          <Text style={styles.playButtonText}>🚀 TAP TO PLAY</Text>
           <View style={styles.buttonGlow} />
         </TouchableOpacity>
 
@@ -151,6 +166,16 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
           <Text style={styles.settingsButtonText}>⚙️ SETTINGS</Text>
         </TouchableOpacity>
       </Animated.View>
+
+      {/* Game Overlay - Shows when user taps to play */}
+      {showGameOverlay && (
+        <Animated.View style={styles.gameOverlay}>
+          <View style={styles.tapToPlayContainer}>
+            <Text style={styles.tapToPlayText}>TAP TO START</Text>
+            <Text style={styles.tapToPlaySubtext}>Fly through the gaps!</Text>
+          </View>
+        </Animated.View>
+      )}
 
       <Animated.View style={[styles.statsContainer, { opacity: statsOpacity }]}>
         <View style={styles.statItem}>
@@ -368,5 +393,36 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: '400',
     letterSpacing: 0.5,
+  },
+  gameOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+  tapToPlayContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    padding: 40,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    alignItems: 'center',
+  },
+  tapToPlayText: {
+    fontSize: 32,
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    letterSpacing: 2,
+    marginBottom: 10,
+  },
+  tapToPlaySubtext: {
+    fontSize: 16,
+    color: '#CCCCCC',
+    textAlign: 'center',
   },
 }); 

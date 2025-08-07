@@ -1,25 +1,68 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import { gameStateManager, GameState } from '../../utils/gameState';
 
 export const PauseMenu: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>(() => gameStateManager.getState());
+  const [menuScale] = useState(new Animated.Value(0.8));
+  const [menuOpacity] = useState(new Animated.Value(0));
 
   useEffect(() => {
     const unsubscribe = gameStateManager.subscribe(setGameState);
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    if (gameState.isPaused) {
+      Animated.parallel([
+        Animated.spring(menuScale, {
+          toValue: 1,
+          tension: 100,
+          friction: 8,
+          useNativeDriver: true,
+        }),
+        Animated.timing(menuOpacity, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      Animated.parallel([
+        Animated.spring(menuScale, {
+          toValue: 0.8,
+          tension: 100,
+          friction: 8,
+          useNativeDriver: true,
+        }),
+        Animated.timing(menuOpacity, {
+          toValue: 0,
+          duration: 150,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [gameState.isPaused]);
+
   const handleResume = () => {
+    if (gameState.settings.hapticsEnabled) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
     gameStateManager.setPaused(false);
   };
 
   const handleSettings = () => {
-    // TODO: Navigate to settings
-    console.log('Settings pressed');
+    if (gameState.settings.hapticsEnabled) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    gameStateManager.setGameMode('settings');
   };
 
   const handleQuit = () => {
+    if (gameState.settings.hapticsEnabled) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
     gameStateManager.setPaused(false);
     gameStateManager.setGameMode('menu');
   };
@@ -29,8 +72,8 @@ export const PauseMenu: React.FC = () => {
   }
 
   return (
-    <View style={styles.overlay}>
-      <View style={styles.menu}>
+    <Animated.View style={[styles.overlay, { opacity: menuOpacity }]}>
+      <Animated.View style={[styles.menu, { transform: [{ scale: menuScale }] }]}>
         <Text style={styles.title}>PAUSED</Text>
         
         <View style={styles.buttonContainer}>
@@ -48,8 +91,8 @@ export const PauseMenu: React.FC = () => {
         </View>
 
         <Text style={styles.hint}>Double tap to pause/resume</Text>
-      </View>
-    </View>
+      </Animated.View>
+    </Animated.View>
   );
 };
 

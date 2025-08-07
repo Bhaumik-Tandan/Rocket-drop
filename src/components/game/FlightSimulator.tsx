@@ -145,7 +145,7 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
         );
         passedSoundRef.current = passedSound;
       } catch (error) {
-        console.warn('Audio not available:', error);
+        // Audio not available - continue without sound
       }
     };
 
@@ -319,12 +319,16 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
   }, [gameState.gameMode, gameState.isPaused, gameLoop]);
 
   const jump = () => {
-    console.log('🚀 JUMP CALLED!', { gameMode: gameState.gameMode, isPaused: gameState.isPaused, gameOver: gameplayState.gameOver });
     if (gameState.gameMode !== 'playing' || gameState.isPaused || gameplayState.gameOver) return;
     
     // Play click sound
     if (gameState.settings.soundEnabled && clickSoundRef.current) {
       clickSoundRef.current.replayAsync();
+    }
+    
+    // Haptic feedback
+    if (gameState.settings.hapticsEnabled) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
     
     setGameplayState(prev => ({
