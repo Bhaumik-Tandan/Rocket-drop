@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { View, StyleSheet, Dimensions, TouchableOpacity, Animated, Text, TextStyle } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { Audio } from 'expo-av';
+import { playClick, playPassed, setAudioEnabled } from '../../utils/audio';
 import { useGameStore } from '../../store/gameStore';
 import { HUD } from '../ui/HUD';
 import { PauseMenu } from '../ui/PauseMenu';
@@ -18,6 +18,10 @@ const PIPE_GAP = 200;          // Much bigger gap between pipes
 const PIPE_WIDTH = 60;
 const VELOCITY_INCREASE_PER_SCORE = 0.1; // Increase velocity by 0.1 for each score
 const MAX_VELOCITY_MULTIPLIER = 3; // Maximum 3x speed
+const NEAR_MISS_THRESHOLD_PX = 8; // Distance from gap edge to count as near-miss
+const BREATHER_EVERY_PASSES = 7; // Spawn an easier gap periodically
+const BREATHER_EXTRA_GAP = 40; // Pixels to add during breather
+const ROTATION_LERP = 0.18; // Smoother rotation interpolation
 
 interface Position {
   x: number;
@@ -36,6 +40,7 @@ interface SpaceObstacle {
   isTop: boolean;
   passed: boolean;
   type: 'asteroid_field' | 'space_station' | 'satellite';
+  gapHeight?: number; // only set on obstacle pairs to render accurate gap indicator
 }
 
 interface Collectible {
@@ -82,10 +87,12 @@ interface GameplayState {
   obstacles: SpaceObstacle[];
   particles: Particle[];
   score: number;
+  streak?: number;
   timeElapsed: number;
   gameOver: boolean;
   screenShake: Animated.Value;
   gameStartTime: number;
+  streakFlash?: Animated.Value;
 }
 
 interface FlightSimulatorProps {
@@ -105,56 +112,22 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
     obstacles: [],
     particles: [],
     score: 0,
+    streak: 0,
     timeElapsed: 0,
     gameOver: false,
     screenShake: new Animated.Value(0),
     gameStartTime: Date.now(),
+    streakFlash: new Animated.Value(0),
   });
 
   const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
   const lastUpdateRef = useRef<number>(Date.now());
-  const passedSoundRef = useRef<Audio.Sound | null>(null);
-  const clickSoundRef = useRef<Audio.Sound | null>(null);
   const scoreUpdateRef = useRef<number>(0);
 
-  // Load audio files
+  // Ensure audio mode follows settings
   useEffect(() => {
-    const loadAudio = async () => {
-      try {
-        console.log('Loading audio in FlightSimulator...');
-        await Audio.setAudioModeAsync({
-          allowsRecordingIOS: false,
-          staysActiveInBackground: false,
-          playsInSilentModeIOS: true,
-          shouldDuckAndroid: true,
-        });
-
-        const { sound: clickSound } = await Audio.Sound.createAsync(
-          require('../../../assets/click.wav'),
-          { shouldPlay: false, volume: 0.5 }
-        );
-        console.log('Click sound loaded successfully');
-        clickSoundRef.current = clickSound;
-
-        const { sound: passedSound } = await Audio.Sound.createAsync(
-          require('../../../assets/passed.wav'),
-          { shouldPlay: false, volume: 0.7 }
-        );
-        console.log('Passed sound loaded successfully');
-        passedSoundRef.current = passedSound;
-      } catch (error) {
-        console.log('Audio loading error in FlightSimulator:', error);
-        // Audio not available - continue without sound
-      }
-    };
-
-    loadAudio();
-    return () => {
-      console.log('Unloading audio in FlightSimulator');
-      clickSoundRef.current?.unloadAsync();
-      passedSoundRef.current?.unloadAsync();
-    };
-  }, []);
+    setAudioEnabled(settings.soundEnabled);
+  }, [settings.soundEnabled]);
 
   // Initialize game when starting
   useEffect(() => {
@@ -205,8 +178,9 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
         // Update position
         newState.rocket.position.y += newState.rocket.velocity.y;
         
-        // Rotation based on velocity (subtle)
-        newState.rocket.rotation = Math.max(-0.5, Math.min(0.5, newState.rocket.velocity.y * 0.05));
+        // Rotation based on velocity with smoothing (lerp)
+        const targetRotation = Math.max(-0.5, Math.min(0.5, newState.rocket.velocity.y * 0.05));
+        newState.rocket.rotation = newState.rocket.rotation + (targetRotation - newState.rocket.rotation) * ROTATION_LERP;
         
         // Calculate current velocity based on score
         const velocityMultiplier = Math.min(1 + (newState.score * VELOCITY_INCREASE_PER_SCORE), MAX_VELOCITY_MULTIPLIER);
@@ -228,7 +202,14 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
         // Always ensure there are obstacles ready to appear on screen (infinite gameplay)
         // Spawn multiple obstacles if needed to maintain continuous flow
         while (newState.obstacles.length === 0 || lastObstacle < width + MIN_OBSTACLE_DISTANCE * 2) {
-          const gapY = Math.random() * (height - PIPE_GAP - 200) + 100; // Keep gaps away from edges
+          // Dynamic gap: slightly tighter with score, with periodic breathers
+          const baseGap = PIPE_GAP;
+          const tighter = Math.min(newState.score * 2, 60);
+          let currentGap = baseGap - tighter;
+          if (newState.score > 0 && newState.score % BREATHER_EVERY_PASSES === 0) {
+            currentGap = baseGap + BREATHER_EXTRA_GAP;
+          }
+          const gapY = Math.random() * (height - currentGap - 200) + 100; // Keep gaps away from edges
           const obstacleId = Date.now() + Math.random(); // Ensure unique IDs
           const obstacleTypes: ('asteroid_field' | 'space_station' | 'satellite')[] = ['asteroid_field', 'space_station', 'satellite'];
           const obstacleType = obstacleTypes[Math.floor(Math.random() * obstacleTypes.length)];
@@ -243,17 +224,19 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
             height: gapY,
             isTop: true,
             passed: false,
-            type: obstacleType
+            type: obstacleType,
+            gapHeight: currentGap,
           });
           
           // Bottom obstacle
           newState.obstacles.push({
             id: obstacleId + 1,
-            position: { x: spawnX, y: gapY + PIPE_GAP },
-            height: height - (gapY + PIPE_GAP),
+            position: { x: spawnX, y: gapY + currentGap },
+            height: height - (gapY + currentGap),
             isTop: false,
             passed: false,
-            type: obstacleType
+            type: obstacleType,
+            gapHeight: currentGap,
           });
           
           // Update lastObstacle for next iteration
@@ -291,17 +274,36 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
               const velocityMultiplier = Math.min(1 + (newState.score * VELOCITY_INCREASE_PER_SCORE), MAX_VELOCITY_MULTIPLIER);
               const newWorldSpeed = WORLD_SPEED * velocityMultiplier;
               
-              // Play passed sound
-              if (settings.soundEnabled && passedSoundRef.current) {
-                console.log('Playing passed sound');
-                passedSoundRef.current.replayAsync().catch(error => {
-                  console.log('Error playing passed sound:', error);
-                });
-              } else {
-                console.log('Passed sound not played - settings:', settings.soundEnabled, 'soundRef:', !!passedSoundRef.current);
+              // Play passed sound (centralized)
+              if (settings.soundEnabled) {
+                playPassed();
               }
               // Success haptic feedback
               Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+
+              // Streak counting and flash
+              newState.streak = (newState.streak ?? 0) + 1;
+              const streakCount = newState.streak;
+              if (streakCount === 3 || streakCount === 5 || streakCount % 10 === 0) {
+                const flash = gameplayState.streakFlash ?? new Animated.Value(0);
+                Animated.sequence([
+                  Animated.timing(flash, { toValue: 1, duration: 120, useNativeDriver: true }),
+                  Animated.timing(flash, { toValue: 0, duration: 180, useNativeDriver: true }),
+                ]).start();
+              }
+
+              // Near-miss bonus: within threshold of gap edges
+              const gapHeight = obstacle.gapHeight ?? PIPE_GAP;
+              const gapBottom = obstacle.position.y;
+              const gapTop = gapBottom - gapHeight;
+              const rocketY = newState.rocket.position.y;
+              const distToEdge = Math.min(Math.abs(rocketY - gapTop), Math.abs(rocketY - gapBottom));
+              if (distToEdge <= NEAR_MISS_THRESHOLD_PX) {
+                newState.score++;
+                scoreUpdateRef.current += 1;
+                // Light haptic to reinforce near-miss
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              }
             }
           }
         }
@@ -340,14 +342,9 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
     if (gameplayState.gameOver) return;
     
     // Play click sound
-    if (settings.soundEnabled && clickSoundRef.current) {
-      console.log('Playing click sound in FlightSimulator');
-      clickSoundRef.current.replayAsync().catch(error => {
-        console.log('Error playing click sound in FlightSimulator:', error);
-      });
-    } else {
-      console.log('Click sound not played in FlightSimulator - settings:', settings.soundEnabled, 'soundRef:', !!clickSoundRef.current);
-    }
+      if (settings.soundEnabled) {
+        playClick();
+      }
     
     // Haptic feedback
     if (settings.hapticsEnabled) {
@@ -464,15 +461,15 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
           </View>
 
           {/* Gap indicators - show where to fly through */}
-          {gameplayState.obstacles.filter(obstacle => obstacle.isTop).map(obstacle => (
+      {gameplayState.obstacles.filter(obstacle => obstacle.isTop).map(obstacle => (
             <View
               key={`gap-${obstacle.id}`}
               style={[
                 styles.gapIndicator,
                 {
                   left: obstacle.position.x + PIPE_WIDTH / 2 - 2,
-                  top: obstacle.height,
-                  height: PIPE_GAP,
+              top: obstacle.height,
+              height: obstacle.gapHeight ?? PIPE_GAP,
                 }
               ]}
             />
@@ -520,6 +517,20 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
       <View style={styles.scoreDisplay}>
         <Text style={styles.scoreText}>{gameplayState.score}</Text>
       </View>
+
+      {/* Streak flash overlay */}
+      <Animated.View
+        pointerEvents="none"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(255, 215, 0, 0.15)',
+          opacity: gameplayState.streakFlash ?? new Animated.Value(0),
+        }}
+      />
 
 
 
