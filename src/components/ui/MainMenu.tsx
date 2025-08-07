@@ -18,17 +18,16 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
   useEffect(() => {
     const loadAudio = async () => {
       try {
-        // Pre-load the audio for instant playback
+        // Create and load the audio for instant playback
         const { sound } = await Audio.Sound.createAsync(
           require('../../../assets/click.wav'),
           { shouldPlay: false, volume: 0.5 }
         );
-        // Pre-load the sound to reduce delay
-        await sound.loadAsync(require('../../../assets/click.wav'));
         clickSoundRef.current = sound;
         setAudioReady(true);
       } catch (error) {
-        // Audio not available - continue without sound
+        console.log('Audio loading error:', error);
+        setAudioReady(true); // Still allow game to work without audio
       }
     };
     loadAudio();

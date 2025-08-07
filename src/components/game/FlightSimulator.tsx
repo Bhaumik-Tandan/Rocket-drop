@@ -131,18 +131,15 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
           require('../../../assets/click.wav'),
           { shouldPlay: false, volume: 0.5 }
         );
-        // Pre-load for instant playback
-        await clickSound.loadAsync(require('../../../assets/click.wav'));
         clickSoundRef.current = clickSound;
 
         const { sound: passedSound } = await Audio.Sound.createAsync(
           require('../../../assets/passed.wav'),
           { shouldPlay: false, volume: 0.7 }
         );
-        // Pre-load for instant playback
-        await passedSound.loadAsync(require('../../../assets/passed.wav'));
         passedSoundRef.current = passedSound;
       } catch (error) {
+        console.log('Audio loading error:', error);
         // Audio not available - continue without sound
       }
     };

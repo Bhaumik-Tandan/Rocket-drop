@@ -1,27 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Switch } from 'react-native';
-import { gameStateManager, GameState } from '../../utils/gameState';
+import { useGameStore } from '../../store/gameStore';
 
 export const SettingsScreen: React.FC = () => {
-  const [gameState, setGameState] = useState<GameState>(() => gameStateManager.getState());
-
-  useEffect(() => {
-    const unsubscribe = gameStateManager.subscribe(setGameState);
-    return unsubscribe;
-  }, []);
+  const { settings, setGameMode, updateSettings } = useGameStore();
 
   const handleBack = () => {
-    gameStateManager.setGameMode('menu');
+    setGameMode('menu');
   };
 
   const toggleSound = (value: boolean) => {
-    gameStateManager.updateSettings({ soundEnabled: value });
+    updateSettings({ soundEnabled: value });
   };
 
-  // Background music toggle removed
-
   const toggleHaptics = (value: boolean) => {
-    gameStateManager.updateSettings({ hapticsEnabled: value });
+    updateSettings({ hapticsEnabled: value });
   };
 
   // Removed difficulty and graphics settings - keeping it simple
@@ -46,10 +39,10 @@ export const SettingsScreen: React.FC = () => {
           <View style={styles.settingRow}>
             <Text style={styles.settingLabel}>Sound Effects</Text>
             <Switch
-              value={gameState.settings.soundEnabled}
+              value={settings.soundEnabled}
               onValueChange={toggleSound}
               trackColor={{ false: '#333333', true: '#00D4AA' }}
-              thumbColor={gameState.settings.soundEnabled ? '#FFFFFF' : '#888888'}
+              thumbColor={settings.soundEnabled ? '#FFFFFF' : '#888888'}
             />
           </View>
 
@@ -58,10 +51,10 @@ export const SettingsScreen: React.FC = () => {
           <View style={styles.settingRow}>
             <Text style={styles.settingLabel}>Haptic Feedback</Text>
             <Switch
-              value={gameState.settings.hapticsEnabled}
+              value={settings.hapticsEnabled}
               onValueChange={toggleHaptics}
               trackColor={{ false: '#333333', true: '#00D4AA' }}
-              thumbColor={gameState.settings.hapticsEnabled ? '#FFFFFF' : '#888888'}
+              thumbColor={settings.hapticsEnabled ? '#FFFFFF' : '#888888'}
             />
           </View>
         </View>
