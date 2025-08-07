@@ -329,8 +329,7 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
     if (!gameplayState.gameOver) return;
     triggerScreenShake();
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    const t = setTimeout(() => onGameOver(gameplayState.score, gameplayState.timeElapsed), 200);
-    return () => clearTimeout(t);
+    // Remove automatic onGameOver call - let user tap button instead
   }, [gameplayState.gameOver]);
 
   // Set up game loop
@@ -562,7 +561,20 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
               <View style={styles.gameOverStat}><Text style={styles.gameOverStatNum}>{gameplayState.score}</Text><Text style={styles.gameOverStatLbl}>SCORE</Text></View>
               <View style={styles.gameOverStat}><Text style={styles.gameOverStatNum}>{Math.round(gameplayState.timeElapsed / 1000)}s</Text><Text style={styles.gameOverStatLbl}>TIME</Text></View>
             </View>
-            <TouchableOpacity style={styles.gameOverBtnPrimary} onPress={() => onGameOver(gameplayState.score, gameplayState.timeElapsed)}>
+            <TouchableOpacity 
+              style={styles.gameOverBtnPrimary} 
+              onPress={() => {
+                // Play click sound
+                if (settings.soundEnabled) {
+                  playClick();
+                }
+                // Haptic feedback
+                if (settings.hapticsEnabled) {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                onGameOver(gameplayState.score, gameplayState.timeElapsed);
+              }}
+            >
               <Text style={styles.gameOverBtnText}>TAP TO CONTINUE</Text>
             </TouchableOpacity>
           </View>
