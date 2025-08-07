@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { View, StyleSheet, Dimensions, TouchableOpacity, Animated, Text, TextStyle } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { gameStateManager, GameState, Aircraft, Mission } from '../../utils/gameState';
+import { Audio } from 'expo-av';
+import { gameStateManager, GameState, Aircraft } from '../../utils/gameState';
 import { HUD } from '../ui/HUD';
 import { PauseMenu } from '../ui/PauseMenu';
 
@@ -110,11 +111,49 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
 
   const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
   const lastUpdateRef = useRef<number>(Date.now());
+  
+  // Simple audio references
+  const clickSoundRef = useRef<Audio.Sound | null>(null);
+  const passedSoundRef = useRef<Audio.Sound | null>(null);
 
   // Subscribe to game state changes
   useEffect(() => {
     const unsubscribe = gameStateManager.subscribe(setGameState);
     return unsubscribe;
+  }, []);
+
+  // Load audio files
+  useEffect(() => {
+    const loadAudio = async () => {
+      try {
+        await Audio.setAudioModeAsync({
+          allowsRecordingIOS: false,
+          staysActiveInBackground: false,
+          playsInSilentModeIOS: true,
+          shouldDuckAndroid: true,
+        });
+
+        const { sound: clickSound } = await Audio.Sound.createAsync(
+          require('../../../assets/click.wav'),
+          { shouldPlay: false, volume: 0.5 }
+        );
+        clickSoundRef.current = clickSound;
+
+        const { sound: passedSound } = await Audio.Sound.createAsync(
+          require('../../../assets/passed.wav'),
+          { shouldPlay: false, volume: 0.7 }
+        );
+        passedSoundRef.current = passedSound;
+      } catch (error) {
+        console.warn('Audio not available:', error);
+      }
+    };
+
+    loadAudio();
+    return () => {
+      clickSoundRef.current?.unloadAsync();
+      passedSoundRef.current?.unloadAsync();
+    };
   }, []);
 
   // Initialize game when starting
@@ -234,12 +273,16 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
           // Check if passed obstacle for scoring
           if (!obstacle.passed && obstacle.position.x + PIPE_WIDTH < newState.rocket.position.x) {
             obstacle.passed = true;
-            if (!obstacle.isTop) { // Only count once per pair
-              newState.score++;
-              gameStateManager.addScore(1);
-              // Success haptic feedback
-              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-            }
+                          if (!obstacle.isTop) { // Only count once per pair
+                newState.score++;
+                gameStateManager.addScore(1);
+                // Play passed sound
+                if (gameState.settings.soundEnabled && passedSoundRef.current) {
+                  passedSoundRef.current.replayAsync();
+                }
+                // Success haptic feedback
+                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+              }
           }
         }
         
@@ -278,6 +321,11 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
   const jump = () => {
     console.log('🚀 JUMP CALLED!', { gameMode: gameState.gameMode, isPaused: gameState.isPaused, gameOver: gameplayState.gameOver });
     if (gameState.gameMode !== 'playing' || gameState.isPaused || gameplayState.gameOver) return;
+    
+    // Play click sound
+    if (gameState.settings.soundEnabled && clickSoundRef.current) {
+      clickSoundRef.current.replayAsync();
+    }
     
     setGameplayState(prev => ({
       ...prev,
@@ -370,32 +418,53 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
             </View>
           </View>
 
+          {/* Gap indicators - show where to fly through */}
+          {gameplayState.obstacles.filter(obstacle => obstacle.isTop).map(obstacle => (
+            <View
+              key={`gap-${obstacle.id}`}
+              style={[
+                styles.gapIndicator,
+                {
+                  left: obstacle.position.x + PIPE_WIDTH / 2 - 2,
+                  top: obstacle.height,
+                  height: PIPE_GAP,
+                }
+              ]}
+            />
+          ))}
+
           {/* Space Obstacles */}
           {gameplayState.obstacles.map(obstacle => (
             <View
               key={obstacle.id}
-              style={[
-                styles.spaceObstacle,
-                obstacle.type === 'asteroid_field' && styles.asteroidField,
-                obstacle.type === 'space_station' && styles.spaceStation,
-                obstacle.type === 'satellite' && styles.satellite,
-                {
-                  left: obstacle.position.x,
-                  top: obstacle.position.y,
-                  width: PIPE_WIDTH,
-                  height: obstacle.height,
-                }
-              ]}
+                              style={[
+                  styles.spaceObstacle,
+                  {
+                    left: obstacle.position.x,
+                    top: obstacle.position.y,
+                    width: PIPE_WIDTH,
+                    height: obstacle.height,
+                  }
+                ]}
             >
-              {obstacle.type === 'asteroid_field' && (
-                <Text style={styles.obstacleText}>☄️</Text>
-              )}
-              {obstacle.type === 'space_station' && (
-                <Text style={styles.obstacleText}>🛰️</Text>
-              )}
-              {obstacle.type === 'satellite' && (
-                <Text style={styles.obstacleText}>📡</Text>
-              )}
+              {/* Clear pipe-style obstacle */}
+              <View style={[
+                styles.pipeBody,
+                obstacle.isTop ? styles.pipeTop : styles.pipeBottom
+              ]}>
+                {/* Pipe cap for visual clarity */}
+                <View style={[
+                  styles.pipeCap,
+                  obstacle.isTop ? styles.pipeCapTop : styles.pipeCapBottom
+                ]} />
+                
+                {/* Pipe texture */}
+                <View style={styles.pipeTexture}>
+                  {Array.from({ length: Math.ceil(obstacle.height / 30) }, (_, i) => (
+                    <View key={i} style={styles.pipeRing} />
+                  ))}
+                </View>
+              </View>
             </View>
           ))}
 
@@ -522,28 +591,59 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  asteroidField: {
-    backgroundColor: '#8B4513',
-    borderWidth: 2,
-    borderColor: '#654321',
+  gapIndicator: {
+    position: 'absolute',
+    width: 4,
+    backgroundColor: 'rgba(0, 255, 0, 0.3)',
+    borderRadius: 2,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 255, 0, 0.6)',
   },
-  spaceStation: {
-    backgroundColor: '#708090',
-    borderWidth: 2,
-    borderColor: '#556B2F',
+  // Clear pipe-style obstacles like Flappy Bird
+  pipeBody: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#228B22',
+    borderWidth: 3,
+    borderColor: '#006400',
+    position: 'relative',
   },
-  satellite: {
-    backgroundColor: '#2F4F4F',
-    borderWidth: 2,
-    borderColor: '#191970',
+  pipeTop: {
+    borderBottomWidth: 0,
   },
-  obstacleText: {
-    fontSize: 20,
-    textAlign: 'center',
-    shadowColor: '#000000',
-    shadowOffset: { width: 1, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
+  pipeBottom: {
+    borderTopWidth: 0,
+  },
+  pipeCap: {
+    position: 'absolute',
+    left: -8,
+    width: PIPE_WIDTH + 16,
+    height: 30,
+    backgroundColor: '#32CD32',
+    borderWidth: 3,
+    borderColor: '#006400',
+    zIndex: 2,
+  },
+  pipeCapTop: {
+    bottom: -3,
+    borderTopWidth: 0,
+  },
+  pipeCapBottom: {
+    top: -3,
+    borderBottomWidth: 0,
+  },
+  pipeTexture: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  },
+  pipeRing: {
+    width: '80%',
+    height: 3,
+    backgroundColor: '#006400',
+    borderRadius: 1.5,
+    opacity: 0.6,
   },
   scoreDisplay: {
     position: 'absolute',

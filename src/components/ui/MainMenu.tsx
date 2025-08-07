@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { gameStateManager, GameState } from '../../utils/gameState';
+
+const { width, height } = Dimensions.get('window');
 
 interface MainMenuProps {
   onStartGame: () => void;
@@ -9,14 +11,82 @@ interface MainMenuProps {
 
 export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
   const [gameState, setGameState] = useState<GameState>(() => gameStateManager.getState());
+  const [titleScale] = useState(new Animated.Value(0.8));
+  const [buttonScale] = useState(new Animated.Value(0.9));
+  const [statsOpacity] = useState(new Animated.Value(0));
+  const [backgroundAnim] = useState(new Animated.Value(0));
 
   useEffect(() => {
     const unsubscribe = gameStateManager.subscribe(setGameState);
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    // Entrance animations
+    Animated.parallel([
+      Animated.spring(titleScale, {
+        toValue: 1,
+        tension: 50,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+      Animated.spring(buttonScale, {
+        toValue: 1,
+        tension: 60,
+        friction: 8,
+        delay: 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(statsOpacity, {
+        toValue: 1,
+        duration: 800,
+        delay: 400,
+        useNativeDriver: true,
+      }),
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(backgroundAnim, {
+            toValue: 1,
+            duration: 3000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(backgroundAnim, {
+            toValue: 0,
+            duration: 3000,
+            useNativeDriver: true,
+          }),
+        ])
+      ),
+    ]).start();
+  }, []);
+
   const handleStartGame = () => {
-    onStartGame();
+    // Button press animation with inverse bound effect
+    Animated.sequence([
+      Animated.timing(buttonScale, {
+        toValue: 0.85,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.spring(buttonScale, {
+        toValue: 1.05,
+        tension: 200,
+        friction: 3,
+        useNativeDriver: true,
+      }),
+      Animated.spring(buttonScale, {
+        toValue: 1,
+        tension: 100,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    
+    setTimeout(() => {
+      onStartGame();
+    }, 150);
   };
 
 
@@ -24,6 +94,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
 
 
   const handleSettings = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     gameStateManager.setGameMode('settings');
   };
 
@@ -31,25 +102,57 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
 
   return (
     <View style={styles.container}>
-      {/* Background gradient effect */}
-      <View style={styles.backgroundGradient} />
+      {/* Animated background gradient effect */}
+      <Animated.View style={[styles.backgroundGradient, {
+        opacity: backgroundAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0.7, 1],
+        }),
+      }]} />
       
-      <View style={styles.header}>
-        <Text style={styles.title}>🚀 FLIGHT SIMULATOR</Text>
-        <Text style={styles.subtitle}>Master the skies</Text>
+      {/* Animated floating particles */}
+      <View style={styles.particlesContainer}>
+        {[...Array(8)].map((_, i) => (
+          <Animated.View
+            key={i}
+            style={[
+              styles.particle,
+              {
+                left: (width / 8) * i + Math.random() * 40,
+                top: height * 0.2 + Math.random() * height * 0.6,
+                opacity: backgroundAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0.3, 0.8],
+                }),
+                transform: [{
+                  translateY: backgroundAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, -20],
+                  }),
+                }],
+              },
+            ]}
+          />
+        ))}
       </View>
+      
+      <Animated.View style={[styles.header, { transform: [{ scale: titleScale }] }]}>
+        <Text style={styles.title}>🚀 SPACE DROP</Text>
+        <Text style={styles.subtitle}>Free Play Adventure</Text>
+      </Animated.View>
 
-      <View style={styles.menuContainer}>
-        <TouchableOpacity style={styles.playButton} onPress={handleStartGame}>
-          <Text style={styles.playButtonText}>🚀 FLY</Text>
+      <Animated.View style={[styles.menuContainer, { transform: [{ scale: buttonScale }] }]}>
+        <TouchableOpacity style={styles.playButton} onPress={handleStartGame} activeOpacity={0.8}>
+          <Text style={styles.playButtonText}>🚀 START FLYING</Text>
+          <View style={styles.buttonGlow} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.settingsButton} onPress={handleSettings}>
-          <Text style={styles.settingsButtonText}>⚙️</Text>
+        <TouchableOpacity style={styles.settingsButton} onPress={handleSettings} activeOpacity={0.7}>
+          <Text style={styles.settingsButtonText}>⚙️ SETTINGS</Text>
         </TouchableOpacity>
-      </View>
+      </Animated.View>
 
-      <View style={styles.statsContainer}>
+      <Animated.View style={[styles.statsContainer, { opacity: statsOpacity }]}>
         <View style={styles.statItem}>
           <Text style={styles.statNumber}>{gameState.stats.bestScore}</Text>
           <Text style={styles.statLabel}>BEST SCORE</Text>
@@ -62,7 +165,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
           <Text style={styles.statNumber}>{Math.floor(gameState.stats.bestDistance)}</Text>
           <Text style={styles.statLabel}>BEST DISTANCE</Text>
         </View>
-      </View>
+      </Animated.View>
     </View>
   );
 };
@@ -80,8 +183,21 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#0A0A0A',
-    opacity: 0.9,
+    backgroundColor: '#0B0B2A',
+  },
+  particlesContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  particle: {
+    position: 'absolute',
+    width: 3,
+    height: 3,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 1.5,
   },
   header: {
     alignItems: 'center',
@@ -191,6 +307,17 @@ const styles = StyleSheet.create({
     elevation: 16,
     minWidth: 200,
     alignItems: 'center',
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  buttonGlow: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 50,
   },
   playButtonText: {
     color: '#FFFFFF',
@@ -200,15 +327,21 @@ const styles = StyleSheet.create({
   },
   settingsButton: {
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    paddingHorizontal: 20,
+    paddingHorizontal: 40,
     paddingVertical: 15,
     borderRadius: 30,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.2)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 180,
   },
   settingsButtonText: {
     color: '#FFFFFF',
-    fontSize: 20,
+    fontSize: 18,
+    fontWeight: '500',
+    letterSpacing: 1,
   },
   statsContainer: {
     flexDirection: 'row',

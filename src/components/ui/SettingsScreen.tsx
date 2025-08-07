@@ -26,13 +26,7 @@ export const SettingsScreen: React.FC = () => {
     gameStateManager.updateSettings({ hapticsEnabled: value });
   };
 
-  const setDifficulty = (difficulty: 'easy' | 'normal' | 'hard') => {
-    gameStateManager.updateSettings({ difficulty });
-  };
-
-  const setGraphicsQuality = (quality: 'low' | 'medium' | 'high') => {
-    gameStateManager.updateSettings({ graphicsQuality: quality });
-  };
+  // Removed difficulty and graphics settings - keeping it simple
 
   return (
     <View style={styles.container}>
@@ -79,92 +73,13 @@ export const SettingsScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* Game Settings */}
+        {/* Simple Info Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>GAME</Text>
-          
-          <View style={styles.settingRow}>
-            <Text style={styles.settingLabel}>Difficulty</Text>
-            <View style={styles.buttonGroup}>
-              <TouchableOpacity 
-                style={[
-                  styles.difficultyButton, 
-                  gameState.settings.difficulty === 'easy' && styles.activeButton
-                ]} 
-                onPress={() => setDifficulty('easy')}
-              >
-                <Text style={[
-                  styles.difficultyButtonText,
-                  gameState.settings.difficulty === 'easy' && styles.activeButtonText
-                ]}>EASY</Text>
-              </TouchableOpacity>
-              <TouchableOpacity 
-                style={[
-                  styles.difficultyButton, 
-                  gameState.settings.difficulty === 'normal' && styles.activeButton
-                ]} 
-                onPress={() => setDifficulty('normal')}
-              >
-                <Text style={[
-                  styles.difficultyButtonText,
-                  gameState.settings.difficulty === 'normal' && styles.activeButtonText
-                ]}>NORMAL</Text>
-              </TouchableOpacity>
-              <TouchableOpacity 
-                style={[
-                  styles.difficultyButton, 
-                  gameState.settings.difficulty === 'hard' && styles.activeButton
-                ]} 
-                onPress={() => setDifficulty('hard')}
-              >
-                <Text style={[
-                  styles.difficultyButtonText,
-                  gameState.settings.difficulty === 'hard' && styles.activeButtonText
-                ]}>HARD</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <View style={styles.settingRow}>
-            <Text style={styles.settingLabel}>Graphics Quality</Text>
-            <View style={styles.buttonGroup}>
-              <TouchableOpacity 
-                style={[
-                  styles.qualityButton, 
-                  gameState.settings.graphicsQuality === 'low' && styles.activeButton
-                ]} 
-                onPress={() => setGraphicsQuality('low')}
-              >
-                <Text style={[
-                  styles.qualityButtonText,
-                  gameState.settings.graphicsQuality === 'low' && styles.activeButtonText
-                ]}>LOW</Text>
-              </TouchableOpacity>
-              <TouchableOpacity 
-                style={[
-                  styles.qualityButton, 
-                  gameState.settings.graphicsQuality === 'medium' && styles.activeButton
-                ]} 
-                onPress={() => setGraphicsQuality('medium')}
-              >
-                <Text style={[
-                  styles.qualityButtonText,
-                  gameState.settings.graphicsQuality === 'medium' && styles.activeButtonText
-                ]}>MED</Text>
-              </TouchableOpacity>
-              <TouchableOpacity 
-                style={[
-                  styles.qualityButton, 
-                  gameState.settings.graphicsQuality === 'high' && styles.activeButton
-                ]} 
-                onPress={() => setGraphicsQuality('high')}
-              >
-                <Text style={[
-                  styles.qualityButtonText,
-                  gameState.settings.graphicsQuality === 'high' && styles.activeButtonText
-                ]}>HIGH</Text>
-              </TouchableOpacity>
-            </View>
+          <Text style={styles.sectionTitle}>GAME INFO</Text>
+          <View style={styles.infoCard}>
+            <Text style={styles.infoTitle}>🚀 Space Drop - Free Play</Text>
+            <Text style={styles.infoText}>Tap to fly through the gaps!</Text>
+            <Text style={styles.infoText}>Avoid the green pipes and get the highest score!</Text>
           </View>
         </View>
       </View>
@@ -231,42 +146,25 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: '400',
   },
-  buttonGroup: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  difficultyButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
+  infoCard: {
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    padding: 20,
+    borderRadius: 12,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.1)',
   },
-  difficultyButtonText: {
-    fontSize: 12,
-    color: '#888888',
-    fontWeight: '400',
+  infoTitle: {
+    fontSize: 18,
+    color: '#00D4AA',
+    fontWeight: '600',
+    marginBottom: 12,
+    textAlign: 'center',
   },
-  qualityButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-  },
-  qualityButtonText: {
-    fontSize: 12,
-    color: '#888888',
-    fontWeight: '400',
-  },
-  activeButton: {
-    backgroundColor: '#00D4AA',
-    borderColor: '#00D4AA',
-  },
-  activeButtonText: {
-    color: '#FFFFFF',
-    fontWeight: '500',
+  infoText: {
+    fontSize: 14,
+    color: '#CCCCCC',
+    lineHeight: 20,
+    textAlign: 'center',
+    marginBottom: 6,
   },
 }); 

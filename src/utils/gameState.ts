@@ -27,36 +27,19 @@ export interface Aircraft {
   requiredLevel: number;
 }
 
-export interface Mission {
-  id: string;
-  title: string;
-  description: string;
-  type: 'training' | 'navigation' | 'landing' | 'aerobatic' | 'rescue' | 'survival';
-  difficulty: number;
-  requiredLevel: number;
-  reward: number;
-  completed: boolean;
-  bestTime?: number;
-  bestScore?: number;
-  objectives: string[];
-  timeLimit?: number; // in seconds
-  targetScore?: number;
-}
+// Mission interface removed - switching to free play mode only
 
 export interface GameSettings {
   soundEnabled: boolean;
   musicEnabled: boolean;
   hapticsEnabled: boolean;
-  graphicsQuality: 'low' | 'medium' | 'high';
-  controlSensitivity: number;
-  difficulty: 'easy' | 'normal' | 'hard';
-  autoPause: boolean;
+  // Removed difficulty and other complex settings - keeping it simple for free play
 }
 
 export interface GameStats {
   totalPlayTime: number;
   totalScore: number;
-  missionsCompleted: number;
+  // missionsCompleted removed - free play only
   aircraftUnlocked: number;
   longestSurvival: number;
   fuelCollected: number;
@@ -91,6 +74,8 @@ export interface GameState {
 // Initial state
 const initialSettings: GameSettings = {
   soundEnabled: true,
+  musicEnabled: true,
+  hapticsEnabled: true,
   musicEnabled: true,
   hapticsEnabled: true,
   graphicsQuality: 'medium',
