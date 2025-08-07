@@ -46,10 +46,8 @@ export const SettingsScreen: React.FC = () => {
             />
           </View>
 
-          {/* Background music switch removed */}
-
           <View style={styles.settingRow}>
-            <Text style={styles.settingLabel}>Haptic Feedback</Text>
+            <Text style={styles.settingLabel}>Vibrations</Text>
             <Switch
               value={settings.hapticsEnabled}
               onValueChange={toggleHaptics}

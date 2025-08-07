@@ -93,6 +93,8 @@ interface GameplayState {
   screenShake: Animated.Value;
   gameStartTime: number;
   streakFlash?: Animated.Value;
+  nearMissFlash?: Animated.Value;
+  achievement?: string;
 }
 
 interface FlightSimulatorProps {
@@ -301,10 +303,29 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
                 newState.score++;
                 scoreUpdateRef.current += 1;
                 // Light haptic to reinforce near-miss
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                if (settings.hapticsEnabled) {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+                // Add near-miss visual feedback
+                const nearMissFlash = new Animated.Value(1);
+                newState.nearMissFlash = nearMissFlash;
+                Animated.sequence([
+                  Animated.timing(nearMissFlash, { toValue: 0, duration: 300, useNativeDriver: true }),
+                ]).start();
               }
             }
           }
+        }
+        
+        // Achievement checks
+        if (newState.score === 10) {
+          newState.achievement = "First Steps!";
+        } else if (newState.score === 25) {
+          newState.achievement = "Getting Good!";
+        } else if (newState.score === 50) {
+          newState.achievement = "Space Ace!";
+        } else if (newState.score === 100) {
+          newState.achievement = "Legendary!";
         }
         
         // Check boundaries - more forgiving
@@ -364,8 +385,10 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
       }
     }));
     
-    // Enhanced haptic feedback for jump
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    // Enhanced haptic feedback for jump (only if enabled)
+    if (settings.hapticsEnabled) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
   };
 
   const handleDoubleTap = () => {
@@ -518,10 +541,16 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
         </Animated.View>
       </Animated.View>
 
-      {/* Simple Score Display (hidden when game over overlay is visible) */}
+      {/* Score and Combo Display */}
       {!gameplayState.gameOver && (
         <View style={styles.scoreDisplay}>
           <Text style={styles.scoreText}>{gameplayState.score}</Text>
+          {gameplayState.streak && gameplayState.streak > 2 && (
+            <Text style={styles.comboText}>COMBO: {gameplayState.streak}</Text>
+          )}
+          {gameplayState.achievement && (
+            <Text style={styles.achievementText}>{gameplayState.achievement}</Text>
+          )}
         </View>
       )}
 
@@ -536,6 +565,18 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
           bottom: 0,
           backgroundColor: 'rgba(255, 215, 0, 0.15)',
           opacity: gameplayState.streakFlash ?? new Animated.Value(0),
+        }}
+      />
+      <Animated.View
+        pointerEvents="none"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 255, 255, 0.2)',
+          opacity: gameplayState.nearMissFlash ?? new Animated.Value(0),
         }}
       />
 
@@ -826,6 +867,26 @@ const styles = StyleSheet.create({
     textShadowColor: '#000000',
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 4,
+  },
+  comboText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#FFD700',
+    textAlign: 'center',
+    marginTop: 8,
+    textShadowColor: '#000000',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+  },
+  achievementText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#00FF00',
+    textAlign: 'center',
+    marginTop: 4,
+    textShadowColor: '#000000',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   fullScreenTouch: {
     position: 'absolute',
