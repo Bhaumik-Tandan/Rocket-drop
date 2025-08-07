@@ -28,6 +28,9 @@ export const SettingsScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      {/* Transparent overlay background */}
+      <View style={styles.overlay} />
+      
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={handleBack}>
           <Text style={styles.backButtonText}>← BACK</Text>
@@ -82,8 +85,16 @@ export const SettingsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0A0A0A',
+    backgroundColor: 'transparent',
     padding: 20,
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
   },
   header: {
     flexDirection: 'row',

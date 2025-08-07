@@ -76,6 +76,12 @@ export const PauseMenu: React.FC = () => {
       <Animated.View style={[styles.menu, { transform: [{ scale: menuScale }] }]}>
         <Text style={styles.title}>PAUSED</Text>
         
+        {/* Highest Score Display */}
+        <View style={styles.scoreContainer}>
+          <Text style={styles.scoreLabel}>HIGHEST SCORE</Text>
+          <Text style={styles.scoreValue}>{gameState.stats.bestScore}</Text>
+        </View>
+        
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={handleResume}>
             <Text style={styles.buttonText}>RESUME</Text>
@@ -161,5 +167,29 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     letterSpacing: 0.5,
     fontWeight: '300',
+  },
+  scoreContainer: {
+    alignItems: 'center',
+    marginBottom: 24,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    backgroundColor: 'rgba(255, 215, 0, 0.1)',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 215, 0, 0.3)',
+  },
+  scoreLabel: {
+    fontSize: 12,
+    color: '#FFD700',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 4,
+    letterSpacing: 1,
+  },
+  scoreValue: {
+    fontSize: 32,
+    color: '#FFD700',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 }); 

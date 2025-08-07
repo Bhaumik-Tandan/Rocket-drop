@@ -117,80 +117,46 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
 
   return (
     <View style={styles.container}>
-      {/* Animated background gradient effect */}
-      <Animated.View style={[styles.backgroundGradient, {
-        opacity: backgroundAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0.7, 1],
-        }),
-      }]} />
-      
-      {/* Animated floating particles */}
-      <View style={styles.particlesContainer}>
-        {[...Array(8)].map((_, i) => (
-          <Animated.View
-            key={i}
-            style={[
-              styles.particle,
-              {
-                left: (width / 8) * i + Math.random() * 40,
-                top: height * 0.2 + Math.random() * height * 0.6,
-                opacity: backgroundAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0.3, 0.8],
-                }),
-                transform: [{
-                  translateY: backgroundAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, -20],
-                  }),
-                }],
-              },
-            ]}
-          />
-        ))}
-      </View>
-      
-      <Animated.View style={[styles.header, { transform: [{ scale: titleScale }] }]}>
-        <Text style={styles.title}>🚀 SPACE DROP</Text>
-        <Text style={styles.subtitle}>Free Play Adventure</Text>
-      </Animated.View>
+      {/* Settings Button - Top Right */}
+      <TouchableOpacity style={styles.settingsButton} onPress={handleSettings} activeOpacity={0.7}>
+        <Text style={styles.settingsButtonText}>⚙️</Text>
+      </TouchableOpacity>
 
-      <Animated.View style={[styles.menuContainer, { transform: [{ scale: buttonScale }] }]}>
-        <TouchableOpacity style={styles.playButton} onPress={handleQuickPlay} activeOpacity={0.8}>
-          <Text style={styles.playButtonText}>🚀 TAP TO PLAY</Text>
-          <View style={styles.buttonGlow} />
-        </TouchableOpacity>
+      {/* Main Content */}
+      <View style={styles.mainContent}>
+        {/* Title */}
+        <Animated.View style={[styles.header, { transform: [{ scale: titleScale }] }]}>
+          <Text style={styles.title}>SPACE DROP</Text>
+          <Text style={styles.subtitle}>Get Ready!</Text>
+        </Animated.View>
 
-        <TouchableOpacity style={styles.settingsButton} onPress={handleSettings} activeOpacity={0.7}>
-          <Text style={styles.settingsButtonText}>⚙️ SETTINGS</Text>
-        </TouchableOpacity>
-      </Animated.View>
-
-      {/* Game Overlay - Shows when user taps to play */}
-      {showGameOverlay && (
-        <Animated.View style={styles.gameOverlay}>
-          <View style={styles.tapToPlayContainer}>
-            <Text style={styles.tapToPlayText}>TAP TO START</Text>
-            <Text style={styles.tapToPlaySubtext}>Fly through the gaps!</Text>
+        {/* Rocket Character */}
+        <Animated.View style={[styles.rocketContainer, { transform: [{ scale: buttonScale }] }]}>
+          <View style={styles.rocket}>
+            <Text style={styles.rocketEmoji}>🚀</Text>
+          </View>
+          <View style={styles.tapIndicator}>
+            <Text style={styles.tapText}>TAP</Text>
           </View>
         </Animated.View>
-      )}
 
-      <Animated.View style={[styles.statsContainer, { opacity: statsOpacity }]}>
-        <View style={styles.statItem}>
-          <Text style={styles.statNumber}>{gameState.stats.bestScore}</Text>
-          <Text style={styles.statLabel}>BEST SCORE</Text>
+        {/* Best Score Display */}
+        <Animated.View style={[styles.scoreContainer, { opacity: statsOpacity }]}>
+          <Text style={styles.scoreLabel}>BEST</Text>
+          <Text style={styles.scoreValue}>{gameState.stats.bestScore}</Text>
+        </Animated.View>
+      </View>
+
+      {/* Tap to Start Overlay */}
+      <TouchableOpacity 
+        style={styles.tapOverlay} 
+        onPress={handleQuickPlay}
+        activeOpacity={1}
+      >
+        <View style={styles.tapOverlayContent}>
+          <Text style={styles.tapOverlayText}>TAP TO START</Text>
         </View>
-        <View style={styles.statItem}>
-          <Text style={styles.statNumber}>{Math.floor(gameState.stats.bestTime / 1000)}</Text>
-          <Text style={styles.statLabel}>BEST TIME (S)</Text>
-        </View>
-        <View style={styles.statItem}>
-          <Text style={styles.statNumber}>{Math.floor(gameState.stats.bestDistance)}</Text>
-          <Text style={styles.statLabel}>BEST DISTANCE</Text>
-        </View>
-      </Animated.View>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -198,231 +164,119 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0A0A0A',
-    justifyContent: 'space-between',
-    padding: 20,
-  },
-  backgroundGradient: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
     backgroundColor: '#0B0B2A',
   },
-  particlesContainer: {
+  settingsButton: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    top: 50,
+    right: 20,
+    width: 50,
+    height: 50,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#4A90E2',
+    zIndex: 10,
   },
-  particle: {
-    position: 'absolute',
-    width: 3,
-    height: 3,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 1.5,
+  settingsButtonText: {
+    fontSize: 24,
+    color: '#FFFFFF',
+  },
+  mainContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 32,
   },
   header: {
     alignItems: 'center',
-    marginTop: 80,
+    marginBottom: 60,
   },
   title: {
-    fontSize: 42,
-    fontWeight: '300',
+    fontSize: 48,
+    fontWeight: 'bold',
     color: '#FFFFFF',
-    textAlign: 'center',
-    marginBottom: 8,
-    letterSpacing: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#888888',
     textAlign: 'center',
     letterSpacing: 2,
-    fontWeight: '300',
+    textShadowColor: '#4A90E2',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 10,
   },
-  playerInfo: {
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    padding: 24,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-    marginHorizontal: 20,
-  },
-  levelText: {
-    fontSize: 20,
-    fontWeight: '400',
-    color: '#FFFFFF',
-    marginBottom: 12,
-    letterSpacing: 1,
-  },
-  experienceBar: {
-    width: 200,
-    height: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 2,
-    overflow: 'hidden',
-    marginBottom: 8,
-  },
-  experienceFill: {
-    height: '100%',
-    backgroundColor: '#00D4AA',
-    borderRadius: 2,
-  },
-  experienceText: {
-    fontSize: 12,
-    color: '#888888',
-    letterSpacing: 0.5,
-  },
-  menuButtons: {
-    gap: 12,
-    marginHorizontal: 20,
-  },
-  menuButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-    alignItems: 'center',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: '400',
-    color: '#FFFFFF',
-    letterSpacing: 1,
-  },
-  footer: {
-    alignItems: 'center',
-    marginBottom: 40,
-  },
-  footerText: {
-    fontSize: 12,
-    color: '#666666',
+  subtitle: {
+    fontSize: 24,
+    color: '#87CEEB',
     textAlign: 'center',
-    letterSpacing: 0.5,
-    fontWeight: '300',
+    marginTop: 8,
+    fontWeight: 'bold',
   },
-  menuContainer: {
+  rocketContainer: {
     alignItems: 'center',
-    gap: 20,
-    marginHorizontal: 20,
-    marginVertical: 40,
+    marginBottom: 60,
   },
-  playButton: {
-    backgroundColor: '#FF4757',
-    paddingHorizontal: 60,
-    paddingVertical: 20,
-    borderRadius: 50,
-    borderWidth: 3,
+  rocket: {
+    width: 80,
+    height: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  rocketEmoji: {
+    fontSize: 60,
+  },
+  tapIndicator: {
+    backgroundColor: '#FF6B35',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 2,
     borderColor: '#FFFFFF',
-    shadowColor: '#FF4757',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.8,
-    shadowRadius: 16,
-    elevation: 16,
-    minWidth: 200,
-    alignItems: 'center',
-    position: 'relative',
-    overflow: 'hidden',
   },
-  buttonGlow: {
+  tapText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  scoreContainer: {
+    alignItems: 'center',
+  },
+  scoreLabel: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    textAlign: 'center',
+    opacity: 0.8,
+    marginBottom: 4,
+  },
+  scoreValue: {
+    color: '#FFD700',
+    fontSize: 32,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  tapOverlay: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 50,
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  playButtonText: {
+  tapOverlayContent: {
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: '#4A90E2',
+  },
+  tapOverlayText: {
     color: '#FFFFFF',
     fontSize: 24,
     fontWeight: 'bold',
-    letterSpacing: 2,
-  },
-  settingsButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    paddingHorizontal: 40,
-    paddingVertical: 15,
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minWidth: 180,
-  },
-  settingsButtonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '500',
-    letterSpacing: 1,
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    padding: 20,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-    marginHorizontal: 20,
-    marginBottom: 40,
-  },
-  statItem: {
-    alignItems: 'center',
-  },
-  statNumber: {
-    fontSize: 28,
-    color: '#FFD700',
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  statLabel: {
-    fontSize: 11,
-    color: '#FFFFFF',
-    fontWeight: '400',
-    letterSpacing: 0.5,
-  },
-  gameOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000,
-  },
-  tapToPlayContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    padding: 40,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
-    alignItems: 'center',
-  },
-  tapToPlayText: {
-    fontSize: 32,
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-    letterSpacing: 2,
-    marginBottom: 10,
-  },
-  tapToPlaySubtext: {
-    fontSize: 16,
-    color: '#CCCCCC',
     textAlign: 'center',
   },
 }); 
