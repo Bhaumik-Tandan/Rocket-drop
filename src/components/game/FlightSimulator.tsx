@@ -115,6 +115,7 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
   const lastUpdateRef = useRef<number>(Date.now());
   const passedSoundRef = useRef<Audio.Sound | null>(null);
   const clickSoundRef = useRef<Audio.Sound | null>(null);
+  const scoreUpdateRef = useRef<number>(0);
 
   // Load audio files
   useEffect(() => {
@@ -158,6 +159,14 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
       if (gameLoopRef.current) clearInterval(gameLoopRef.current);
     };
   }, []);
+
+  // Handle score updates outside of render cycle
+  useEffect(() => {
+    if (scoreUpdateRef.current > 0) {
+      addScore(scoreUpdateRef.current);
+      scoreUpdateRef.current = 0;
+    }
+  }, [gameplayState.score, addScore]);
 
   const initializeGame = () => {
     setGameplayState({
@@ -272,18 +281,18 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
             obstacle.passed = true;
             if (!obstacle.isTop) { // Only count once per pair
               newState.score++;
-              addScore(1);
+              scoreUpdateRef.current += 1; // Queue score update for next render cycle
               
               // Increase velocity based on score
               const velocityMultiplier = Math.min(1 + (newState.score * VELOCITY_INCREASE_PER_SCORE), MAX_VELOCITY_MULTIPLIER);
               const newWorldSpeed = WORLD_SPEED * velocityMultiplier;
               
-                                      // Play passed sound
-                if (settings.soundEnabled && passedSoundRef.current) {
-                  passedSoundRef.current.playAsync();
-                }
-                // Success haptic feedback
-                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+              // Play passed sound
+              if (settings.soundEnabled && passedSoundRef.current) {
+                passedSoundRef.current.playAsync();
+              }
+              // Success haptic feedback
+              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             }
           }
         }
