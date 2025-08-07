@@ -257,10 +257,9 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
             newState.rocket.position.y + (ROCKET_SIZE / 2 - hitboxReduction) > obstacle.position.y &&
             newState.rocket.position.y - (ROCKET_SIZE / 2 - hitboxReduction) < obstacle.position.y + obstacle.height
           ) {
-            // Heavy haptic feedback on collision
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+            // Defer side effects via handleGameOver
             handleGameOver(newState.score, newState.timeElapsed);
-            return prevState;
+            return newState;
           }
           
           // Check if passed obstacle for scoring
@@ -310,10 +309,8 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
         
         // Check boundaries - more forgiving
         if (newState.rocket.position.y < -10 || newState.rocket.position.y > height + 10) {
-          // Heavy haptic feedback on boundary collision
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
           handleGameOver(newState.score, newState.timeElapsed);
-          return prevState;
+          return newState;
         }
         
         return newState;
@@ -324,10 +321,17 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
 
 
   const handleGameOver = (score: number, time: number) => {
+    // mark state; side effects are deferred in effect below
+    setGameplayState(prev => ({ ...prev, gameOver: true }));
+  };
+
+  useEffect(() => {
+    if (!gameplayState.gameOver) return;
     triggerScreenShake();
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    onGameOver(score, time);
-  };
+    const t = setTimeout(() => onGameOver(gameplayState.score, gameplayState.timeElapsed), 200);
+    return () => clearTimeout(t);
+  }, [gameplayState.gameOver]);
 
   // Set up game loop
   useEffect(() => {
