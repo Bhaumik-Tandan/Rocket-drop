@@ -49,9 +49,9 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
 
   return (
     <View style={styles.container}>
-      {/* Background Stars - Like the game screen */}
+      {/* Enhanced Background Stars */}
       <View style={styles.starsContainer}>
-        {Array.from({ length: 100 }).map((_, i) => (
+        {Array.from({ length: 150 }).map((_, i) => (
           <View
             key={i}
             style={[
@@ -59,18 +59,17 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
               {
                 left: Math.random() * width,
                 top: Math.random() * height,
-                opacity: Math.random() * 0.8 + 0.2,
+                opacity: Math.random() * 0.9 + 0.1,
+                width: Math.random() * 3 + 1,
+                height: Math.random() * 3 + 1,
               }
             ]}
           />
         ))}
       </View>
 
-      {/* Highest Score Display - Top Center */}
-      <View style={[styles.highScoreContainer, { marginTop: insets.top + 20 }]}>
-        <Text style={styles.highScoreLabel}>HIGHEST</Text>
-        <Text style={styles.highScoreValue}>{stats.bestScore}</Text>
-      </View>
+      {/* Gradient Overlay */}
+      <View style={styles.gradientOverlay} />
 
       {/* Settings Button - Top Right */}
       <TouchableOpacity 
@@ -84,63 +83,68 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
         <Text style={styles.settingsButtonText}>⚙️</Text>
       </TouchableOpacity>
 
-      {/* Transparent Black Curtain */}
-      <View style={styles.curtainOverlay} />
+      {/* Main Content Container */}
+      <View style={styles.mainContent}>
+        {/* Game Title with Glow */}
+        <View style={[styles.titleContainer, { marginTop: insets.top + 60 }]}>
+          <Text style={styles.gameTitle}>SPACE DROP</Text>
+          <Text style={styles.gameSubtitle}>Free Play Adventure</Text>
+        </View>
 
-      {/* Tap Anywhere Text */}
-      <View style={[styles.tapAnywhereContainer, { bottom: insets.bottom + 40 }]}>
-        <Text style={styles.tapAnywhereText}>TAP ANYWHERE TO PLAY</Text>
-      </View>
+        {/* High Score Card */}
+        <View style={styles.highScoreCard}>
+          <Text style={styles.highScoreLabel}>BEST SCORE</Text>
+          <Text style={styles.highScoreValue}>{stats.bestScore}</Text>
+        </View>
 
-      {/* Game Title */}
-      <View style={[styles.titleContainer, { top: insets.top + height * 0.1 }]}>
-        <Text style={styles.gameTitle}>SPACE DROP</Text>
-        <Text style={styles.gameSubtitle}>Free Play Adventure</Text>
-      </View>
+        {/* Play Button */}
+        <TouchableOpacity 
+          style={styles.playButton} 
+          onPress={handleQuickPlay}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.playButtonText}>TAP TO PLAY</Text>
+          <Text style={styles.playButtonSubtext}>Ready for adventure?</Text>
+        </TouchableOpacity>
 
-      {/* Detailed Spaceship - Like in game */}
-      <View style={styles.spaceshipContainer}>
-        <View style={[styles.spaceship, { 
-          transform: [
-            { rotate: '20deg' }
-          ] 
-        }]}>
-          {/* Main Body */}
-          <View style={styles.spaceshipBody}>
-            {/* Cockpit with glow */}
-            <View style={styles.spaceshipCockpit}>
-              <View style={styles.cockpitGlow} />
-              <View style={styles.cockpitWindow} />
+        {/* Floating Spaceship */}
+        <View style={styles.spaceshipContainer}>
+          <View style={[styles.spaceship, { 
+            transform: [
+              { rotate: '15deg' },
+              { translateY: -10 }
+            ] 
+          }]}>
+            {/* Main Body */}
+            <View style={styles.spaceshipBody}>
+              {/* Cockpit with glow */}
+              <View style={styles.spaceshipCockpit}>
+                <View style={styles.cockpitGlow} />
+                <View style={styles.cockpitWindow} />
+              </View>
+              
+              {/* Wings */}
+              <View style={styles.spaceshipWings}>
+                <View style={styles.wingLeft} />
+                <View style={styles.wingRight} />
+              </View>
+              
+              {/* Engine with thrust effect */}
+              <View style={styles.spaceshipEngine}>
+                <View style={styles.engineGlow} />
+                <View style={styles.thrustEffect} />
+              </View>
+              
+              {/* Side panels */}
+              <View style={styles.sidePanelLeft} />
+              <View style={styles.sidePanelRight} />
+              
+              {/* Nose cone */}
+              <View style={styles.noseCone} />
             </View>
-            
-            {/* Wings */}
-            <View style={styles.spaceshipWings}>
-              <View style={styles.wingLeft} />
-              <View style={styles.wingRight} />
-            </View>
-            
-            {/* Engine with thrust effect */}
-            <View style={styles.spaceshipEngine}>
-              <View style={styles.engineGlow} />
-              <View style={styles.thrustEffect} />
-            </View>
-            
-            {/* Side panels */}
-            <View style={styles.sidePanelLeft} />
-            <View style={styles.sidePanelRight} />
-            
-            {/* Nose cone */}
-            <View style={styles.noseCone} />
           </View>
         </View>
       </View>
-
-      {/* Tap to Start - Invisible overlay */}
-      <TouchableOpacity 
-        style={styles.tapOverlay} 
-        onPress={handleQuickPlay}
-        activeOpacity={1}
-      />
     </View>
   );
 };
@@ -164,18 +168,20 @@ const styles = StyleSheet.create({
   },
   settingsButton: {
     position: 'absolute',
-    width: 44,
-    height: 44,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 22,
+    width: 48,
+    height: 48,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
     shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.4,
-    shadowRadius: 6,
-    elevation: 6,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
   settingsButtonText: {
     fontSize: 20,
@@ -209,14 +215,66 @@ const styles = StyleSheet.create({
     textShadowRadius: 4,
   },
 
-  curtainOverlay: {
+  gradientOverlay: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(11, 11, 42, 0.3)',
     zIndex: 5,
+  },
+  mainContent: {
+    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    zIndex: 10,
+  },
+  highScoreCard: {
+    backgroundColor: 'rgba(255, 215, 0, 0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 215, 0, 0.3)',
+    borderRadius: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    alignItems: 'center',
+    marginVertical: 20,
+    shadowColor: '#FFD700',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  playButton: {
+    backgroundColor: 'rgba(74, 144, 226, 0.2)',
+    borderWidth: 2,
+    borderColor: 'rgba(74, 144, 226, 0.6)',
+    borderRadius: 20,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    alignItems: 'center',
+    marginVertical: 20,
+    shadowColor: '#4A90E2',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  playButtonText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    letterSpacing: 1,
+    textShadowColor: '#000000',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+  },
+  playButtonSubtext: {
+    fontSize: 12,
+    color: '#CCCCCC',
+    marginTop: 4,
+    opacity: 0.8,
   },
   tapAnywhereContainer: {
     position: 'absolute',
@@ -402,21 +460,22 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   gameTitle: {
-    fontSize: 48,
+    fontSize: 52,
     fontWeight: 'bold',
     color: '#FFD700',
     textAlign: 'center',
     textShadowColor: 'rgba(0, 0, 0, 0.8)',
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 4,
-    letterSpacing: 2,
-    marginBottom: 8,
+    textShadowOffset: { width: 3, height: 3 },
+    textShadowRadius: 6,
+    letterSpacing: 3,
+    marginBottom: 12,
   },
   gameSubtitle: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#FFFFFF',
     textAlign: 'center',
-    opacity: 0.8,
-    letterSpacing: 1,
+    opacity: 0.9,
+    letterSpacing: 1.5,
+    fontWeight: '500',
   },
 }); 
