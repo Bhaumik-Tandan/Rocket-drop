@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Text, TouchableOpacity, Modal } from 'react-native';
 import * as Haptics from 'expo-haptics';
@@ -6,8 +6,17 @@ import { useGameStore } from './src/store/gameStore';
 import { MainMenu } from './src/components/ui/MainMenu';
 import { PauseMenu } from './src/components/ui/PauseMenu';
 import { SettingsScreen } from './src/components/ui/SettingsScreen';
-
 import { FlightSimulator } from './src/components/game/FlightSimulator';
+import { setAudioEnabled } from './src/utils/audio';
+
+// Suppress expo-av deprecation warning
+const originalWarn = console.warn;
+console.warn = (...args) => {
+  if (args[0] && typeof args[0] === 'string' && args[0].includes('expo-av')) {
+    return; // Suppress expo-av deprecation warnings
+  }
+  originalWarn.apply(console, args);
+};
 
 export default function App() {
   const { 
@@ -17,8 +26,14 @@ export default function App() {
     sessionDistance, 
     startSession, 
     endSession, 
-    setGameMode 
+    setGameMode,
+    settings
   } = useGameStore();
+
+  // Sync sound setting with audio service
+  useEffect(() => {
+    setAudioEnabled(settings.soundEnabled);
+  }, [settings.soundEnabled]);
 
   const handleGameOver = (score: number, time: number) => {
     // Persist run stats; keep rendering the game so we can show an in-game Game Over overlay
