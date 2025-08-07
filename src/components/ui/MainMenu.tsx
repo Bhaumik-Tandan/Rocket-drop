@@ -43,7 +43,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
     <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
       {/* Background Stars */}
       <View style={styles.starsContainer}>
-        {Array.from({ length: 100 }).map((_, i) => (
+        {Array.from({ length: 80 }).map((_, i) => (
           <View
             key={i}
             style={[
@@ -51,7 +51,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
               {
                 left: Math.random() * width,
                 top: Math.random() * height,
-                opacity: Math.random() * 0.8 + 0.2,
+                opacity: Math.random() * 0.6 + 0.4,
                 width: Math.random() * 2 + 1,
                 height: Math.random() * 2 + 1,
               }
@@ -72,37 +72,39 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
         <Text style={styles.settingsButtonText}>⚙️</Text>
       </TouchableOpacity>
 
-      {/* Main Content */}
+      {/* Main Content - Centered like Flappy Bird */}
       <View style={styles.content}>
         {/* Title Section */}
         <View style={styles.titleSection}>
-          <Text style={styles.gameTitle}>SPACE DROP</Text>
-          <Text style={styles.gameSubtitle}>Free Play Adventure</Text>
+          <Text style={styles.gameTitle}>COSMIC DASH</Text>
+          <Text style={styles.gameSubtitle}>Space Adventure</Text>
         </View>
 
-        {/* High Score */}
+        {/* Centered UFO - Like Flappy Bird */}
+        <View style={styles.ufoContainer}>
+          <View style={styles.ufo}>
+            <View style={styles.ufoBody}>
+              <View style={styles.ufoCockpit} />
+              <View style={styles.ufoEngine} />
+            </View>
+          </View>
+        </View>
+
+        {/* Tap to Play - Centered below UFO */}
+        <View style={styles.playSection}>
+          <TouchableOpacity 
+            style={styles.playButton} 
+            onPress={handleQuickPlay}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.playButtonText}>TAP TO PLAY</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* High Score - Bottom */}
         <View style={styles.scoreSection}>
           <Text style={styles.scoreLabel}>BEST SCORE</Text>
           <Text style={styles.scoreValue}>{stats.bestScore}</Text>
-        </View>
-
-        {/* Play Button */}
-        <TouchableOpacity 
-          style={styles.playButton} 
-          onPress={handleQuickPlay}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.playButtonText}>TAP TO PLAY</Text>
-        </TouchableOpacity>
-
-        {/* UFO Spaceship */}
-        <View style={styles.spaceshipContainer}>
-          <View style={[styles.spaceship, { transform: [{ rotate: '15deg' }] }]}>
-            <View style={styles.spaceshipBody}>
-              <View style={styles.spaceshipCockpit} />
-              <View style={styles.spaceshipEngine} />
-            </View>
-          </View>
         </View>
       </View>
 
@@ -139,7 +141,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   settingsButton: {
     position: 'absolute',
@@ -159,59 +161,78 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 60,
+    paddingTop: 40,
     paddingBottom: 40,
   },
   titleSection: {
     alignItems: 'center',
-    marginTop: 40,
+    marginTop: 20,
   },
   gameTitle: {
-    fontSize: 48,
+    fontSize: 42,
     fontWeight: 'bold',
     color: '#FFFFFF',
     textAlign: 'center',
     textShadowColor: '#4A90E2',
     textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 10,
+    textShadowRadius: 8,
     letterSpacing: 2,
   },
   gameSubtitle: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#CCCCCC',
     textAlign: 'center',
-    marginTop: 8,
+    marginTop: 6,
     opacity: 0.8,
   },
-  scoreSection: {
+  ufoContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 215, 0, 0.1)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 215, 0, 0.3)',
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    marginVertical: 20,
   },
-  scoreLabel: {
-    fontSize: 12,
-    color: '#FFD700',
-    fontWeight: '600',
-    letterSpacing: 1,
+  ufo: {
+    width: 80,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  scoreValue: {
-    fontSize: 24,
-    color: '#FFD700',
-    fontWeight: 'bold',
-    marginTop: 4,
+  ufoBody: {
+    width: 80,
+    height: 40,
+    backgroundColor: '#4A90E2',
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#4A90E2',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  ufoCockpit: {
+    width: 24,
+    height: 16,
+    backgroundColor: '#87CEEB',
+    borderRadius: 8,
+    marginBottom: 4,
+  },
+  ufoEngine: {
+    width: 12,
+    height: 20,
+    backgroundColor: '#FF6B35',
+    borderRadius: 6,
+  },
+  playSection: {
+    alignItems: 'center',
+    marginBottom: 40,
   },
   playButton: {
     backgroundColor: 'rgba(74, 144, 226, 0.2)',
     borderWidth: 2,
     borderColor: 'rgba(74, 144, 226, 0.6)',
-    borderRadius: 16,
+    borderRadius: 20,
     paddingVertical: 16,
-    paddingHorizontal: 32,
+    paddingHorizontal: 40,
     alignItems: 'center',
     shadowColor: '#4A90E2',
     shadowOffset: { width: 0, height: 4 },
@@ -225,32 +246,25 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     letterSpacing: 1,
   },
-  spaceshipContainer: {
+  scoreSection: {
     alignItems: 'center',
-    marginTop: 20,
+    backgroundColor: 'rgba(255, 215, 0, 0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 215, 0, 0.3)',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
   },
-  spaceship: {
-    width: 60,
-    height: 40,
+  scoreLabel: {
+    fontSize: 12,
+    color: '#FFD700',
+    fontWeight: '600',
+    letterSpacing: 1,
   },
-  spaceshipBody: {
-    flex: 1,
-    backgroundColor: '#4A90E2',
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  spaceshipCockpit: {
-    width: 20,
-    height: 12,
-    backgroundColor: '#87CEEB',
-    borderRadius: 6,
-  },
-  spaceshipEngine: {
-    width: 8,
-    height: 16,
-    backgroundColor: '#FF6B35',
-    borderRadius: 4,
+  scoreValue: {
+    fontSize: 24,
+    color: '#FFD700',
+    fontWeight: 'bold',
     marginTop: 4,
   },
   tapArea: {
