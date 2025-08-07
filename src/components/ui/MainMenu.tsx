@@ -11,7 +11,6 @@ interface MainMenuProps {
 
 export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
   const [gameState, setGameState] = useState<GameState>(() => gameStateManager.getState());
-  const [ufoReady, setUfoReady] = useState(false);
 
   useEffect(() => {
     const unsubscribe = gameStateManager.subscribe(setGameState);
@@ -22,12 +21,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
     if (gameState.settings.hapticsEnabled) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    
-    if (!ufoReady) {
-      setUfoReady(true);
-    } else {
-      onStartGame();
-    }
+    onStartGame();
   };
 
 
@@ -85,7 +79,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
       <View style={styles.spaceshipContainer}>
         <View style={[styles.spaceship, { 
           transform: [{ 
-            rotate: ufoReady ? '0deg' : '-20deg' 
+            rotate: '-20deg' 
           }] 
         }]}>
           {/* Main Body */}
