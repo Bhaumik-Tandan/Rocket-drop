@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Text, TouchableOpacity, Modal } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { useGameStore } from './src/store/gameStore';
 import { MainMenu } from './src/components/ui/MainMenu';
@@ -41,37 +42,34 @@ export default function App() {
   // Render based on game mode
   if (gameMode === 'menu') {
     return (
-      <View style={styles.container}>
-        <StatusBar style="light" />
-        <MainMenu onStartGame={handleStartGame} />
-      </View>
+      <SafeAreaProvider>
+        <View style={styles.container}>
+          <StatusBar style="light" />
+          <MainMenu onStartGame={handleStartGame} />
+        </View>
+      </SafeAreaProvider>
     );
   }
 
   if (gameMode === 'settings') {
     return (
-      <View style={styles.container}>
-        <StatusBar style="light" />
-        <SettingsScreen />
-      </View>
+      <SafeAreaProvider>
+        <View style={styles.container}>
+          <StatusBar style="light" />
+          <SettingsScreen />
+        </View>
+      </SafeAreaProvider>
     );
   }
 
-
-
-
-
-
-
-
-
   // Game is playing
   return (
-    <View style={styles.container}>
-      <StatusBar style="light" />
-      
-            <FlightSimulator onGameOver={handleGameOver} />
-    </View>
+    <SafeAreaProvider>
+      <View style={styles.container}>
+        <StatusBar style="light" />
+        <FlightSimulator onGameOver={handleGameOver} />
+      </View>
+    </SafeAreaProvider>
   );
 }
 

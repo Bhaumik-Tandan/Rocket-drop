@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { playClick, setAudioEnabled } from '../../utils/audio';
 import { useGameStore } from '../../store/gameStore';
@@ -13,6 +14,7 @@ interface MainMenuProps {
 export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
   const { settings, stats, setGameMode } = useGameStore();
   const [audioReady, setAudioReady] = useState(false);
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     setAudioEnabled(settings.soundEnabled).then(() => setAudioReady(true));
@@ -65,13 +67,20 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
       </View>
 
       {/* Highest Score Display - Top Center */}
-      <View style={styles.highScoreContainer}>
+      <View style={[styles.highScoreContainer, { marginTop: insets.top + 20 }]}>
         <Text style={styles.highScoreLabel}>HIGHEST</Text>
         <Text style={styles.highScoreValue}>{stats.bestScore}</Text>
       </View>
 
       {/* Settings Button - Top Right */}
-      <TouchableOpacity style={styles.settingsButton} onPress={handleSettings} activeOpacity={0.7}>
+      <TouchableOpacity 
+        style={[styles.settingsButton, { 
+          top: insets.top + 20,
+          right: insets.right + 20
+        }]} 
+        onPress={handleSettings} 
+        activeOpacity={0.7}
+      >
         <Text style={styles.settingsButtonText}>⚙️</Text>
       </TouchableOpacity>
 
@@ -79,7 +88,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
       <View style={styles.curtainOverlay} />
 
       {/* Tap Anywhere Text */}
-      <View style={styles.tapAnywhereContainer}>
+      <View style={[styles.tapAnywhereContainer, { marginBottom: insets.bottom + 20 }]}>
         <Text style={styles.tapAnywhereText}>TAP ANYWHERE TO PLAY</Text>
       </View>
 
