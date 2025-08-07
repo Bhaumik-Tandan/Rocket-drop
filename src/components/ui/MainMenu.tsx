@@ -11,6 +11,7 @@ interface MainMenuProps {
 
 export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
   const [gameState, setGameState] = useState<GameState>(() => gameStateManager.getState());
+  const [ufoReady, setUfoReady] = useState(false);
 
   useEffect(() => {
     const unsubscribe = gameStateManager.subscribe(setGameState);
@@ -21,7 +22,12 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
     if (gameState.settings.hapticsEnabled) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    onStartGame();
+    
+    if (!ufoReady) {
+      setUfoReady(true);
+    } else {
+      onStartGame();
+    }
   };
 
 
@@ -67,12 +73,21 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
         <Text style={styles.highScoreValue}>{gameState.stats.bestScore}</Text>
       </View>
 
-      {/* Blurred Background Overlay */}
-      <View style={styles.blurOverlay} />
+      {/* Transparent Black Curtain */}
+      <View style={styles.curtainOverlay} />
+
+      {/* Tap Anywhere Text */}
+      <View style={styles.tapAnywhereContainer}>
+        <Text style={styles.tapAnywhereText}>TAP ANYWHERE TO PLAY</Text>
+      </View>
 
       {/* Detailed Spaceship - Like in game */}
       <View style={styles.spaceshipContainer}>
-        <View style={styles.spaceship}>
+        <View style={[styles.spaceship, { 
+          transform: [{ 
+            rotate: ufoReady ? '0deg' : '-20deg' 
+          }] 
+        }]}>
           {/* Main Body */}
           <View style={styles.spaceshipBody}>
             {/* Cockpit with glow */}
@@ -100,11 +115,6 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
             {/* Nose cone */}
             <View style={styles.noseCone} />
           </View>
-        </View>
-        
-        {/* Tap to Play Indicator - Like Flappy Bird */}
-        <View style={styles.tapIndicator}>
-          <Text style={styles.tapText}>TAP TO PLAY</Text>
         </View>
       </View>
 
@@ -141,18 +151,16 @@ const styles = StyleSheet.create({
     right: 20,
     width: 44,
     height: 44,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
     zIndex: 10,
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 4,
+    shadowOpacity: 0.4,
+    shadowRadius: 6,
+    elevation: 6,
   },
   settingsButtonText: {
     fontSize: 20,
@@ -181,14 +189,32 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  blurOverlay: {
+  curtainOverlay: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     zIndex: 5,
+  },
+  tapAnywhereContainer: {
+    position: 'absolute',
+    top: 120,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    zIndex: 12,
+  },
+  tapAnywhereText: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    letterSpacing: 1,
+    textShadowColor: '#000000',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   spaceshipContainer: {
     position: 'absolute',
@@ -339,23 +365,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     transform: [{ rotate: '45deg' }],
   },
-  tapIndicator: {
-    marginTop: 40,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
-    alignItems: 'center',
-  },
-  tapText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    letterSpacing: 1,
-  },
+
   tapOverlay: {
     position: 'absolute',
     top: 0,
