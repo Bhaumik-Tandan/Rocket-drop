@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import { Audio } from 'expo-av';
 import { gameStateManager, GameState } from '../../utils/gameState';
 
 const { width, height } = Dimensions.get('window');
@@ -11,17 +12,48 @@ interface MainMenuProps {
 
 export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
   const [gameState, setGameState] = useState<GameState>(() => gameStateManager.getState());
+  const [ufoReady, setUfoReady] = useState(false);
+  const clickSoundRef = useRef<Audio.Sound | null>(null);
 
   useEffect(() => {
     const unsubscribe = gameStateManager.subscribe(setGameState);
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    const loadAudio = async () => {
+      try {
+        const { sound } = await Audio.Sound.createAsync(
+          require('../../../assets/click.wav'),
+          { shouldPlay: false, volume: 0.5 }
+        );
+        clickSoundRef.current = sound;
+      } catch (error) {
+        // Audio not available - continue without sound
+      }
+    };
+    loadAudio();
+    return () => {
+      clickSoundRef.current?.unloadAsync();
+    };
+  }, []);
+
   const handleQuickPlay = () => {
+    // Play click sound
+    if (gameState.settings.soundEnabled && clickSoundRef.current) {
+      clickSoundRef.current.replayAsync();
+    }
+    
+    // Haptic feedback
     if (gameState.settings.hapticsEnabled) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    onStartGame();
+    
+    if (!ufoReady) {
+      setUfoReady(true);
+    } else {
+      onStartGame();
+    }
   };
 
 
@@ -78,9 +110,10 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
       {/* Detailed Spaceship - Like in game */}
       <View style={styles.spaceshipContainer}>
         <View style={[styles.spaceship, { 
-          transform: [{ 
-            rotate: '20deg' 
-          }] 
+          transform: [
+            { rotate: ufoReady ? '0deg' : '20deg' },
+            { translateY: ufoReady ? -20 : 0 }
+          ] 
         }]}>
           {/* Main Body */}
           <View style={styles.spaceshipBody}>
@@ -112,16 +145,12 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
         </View>
       </View>
 
-      {/* Tap to Start - Full screen overlay */}
+      {/* Tap to Start - Invisible overlay */}
       <TouchableOpacity 
         style={styles.tapOverlay} 
         onPress={handleQuickPlay}
         activeOpacity={1}
-      >
-        <View style={styles.tapOverlayContent}>
-          <Text style={styles.tapOverlayText}>TAP TO START</Text>
-        </View>
-      </TouchableOpacity>
+      />
     </View>
   );
 };
@@ -378,21 +407,5 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: 'transparent',
     zIndex: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  tapOverlayContent: {
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: '#4A90E2',
-  },
-  tapOverlayText: {
-    color: '#FFFFFF',
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
 }); 
