@@ -18,20 +18,23 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
   useEffect(() => {
     const loadAudio = async () => {
       try {
+        console.log('Loading audio in MainMenu...');
         // Create and load the audio for instant playback
         const { sound } = await Audio.Sound.createAsync(
           require('../../../assets/click.wav'),
           { shouldPlay: false, volume: 0.5 }
         );
+        console.log('Audio loaded successfully in MainMenu');
         clickSoundRef.current = sound;
         setAudioReady(true);
       } catch (error) {
-        console.log('Audio loading error:', error);
+        console.log('Audio loading error in MainMenu:', error);
         setAudioReady(true); // Still allow game to work without audio
       }
     };
     loadAudio();
     return () => {
+      console.log('Unloading audio in MainMenu');
       clickSoundRef.current?.unloadAsync();
     };
   }, []);
@@ -39,7 +42,28 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
   const handleQuickPlay = () => {
     // Play click sound (only if audio is ready)
     if (settings.soundEnabled && audioReady && clickSoundRef.current) {
-      clickSoundRef.current.playAsync();
+      console.log('Playing click sound in MainMenu');
+      // Check if sound is loaded before playing
+      clickSoundRef.current.getStatusAsync().then(status => {
+        console.log('Sound status in MainMenu:', status);
+        if (status.isLoaded) {
+          clickSoundRef.current?.playAsync().catch(error => {
+            console.log('Error playing click sound in MainMenu:', error);
+            // Try to reload and play again
+            clickSoundRef.current?.loadAsync(require('../../../assets/click.wav')).then(() => {
+              clickSoundRef.current?.playAsync().catch(retryError => {
+                console.log('Retry failed for click sound in MainMenu:', retryError);
+              });
+            });
+          });
+        } else {
+          console.log('Sound not loaded in MainMenu, status:', status);
+        }
+      }).catch(error => {
+        console.log('Error getting sound status in MainMenu:', error);
+      });
+    } else {
+      console.log('Click sound not played - settings:', settings.soundEnabled, 'audioReady:', audioReady, 'soundRef:', !!clickSoundRef.current);
     }
     
     // Haptic feedback

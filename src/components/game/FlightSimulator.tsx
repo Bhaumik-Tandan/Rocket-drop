@@ -121,6 +121,7 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
   useEffect(() => {
     const loadAudio = async () => {
       try {
+        console.log('Loading audio in FlightSimulator...');
         await Audio.setAudioModeAsync({
           allowsRecordingIOS: false,
           staysActiveInBackground: false,
@@ -132,21 +133,24 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
           require('../../../assets/click.wav'),
           { shouldPlay: false, volume: 0.5 }
         );
+        console.log('Click sound loaded successfully');
         clickSoundRef.current = clickSound;
 
         const { sound: passedSound } = await Audio.Sound.createAsync(
           require('../../../assets/passed.wav'),
           { shouldPlay: false, volume: 0.7 }
         );
+        console.log('Passed sound loaded successfully');
         passedSoundRef.current = passedSound;
       } catch (error) {
-        console.log('Audio loading error:', error);
+        console.log('Audio loading error in FlightSimulator:', error);
         // Audio not available - continue without sound
       }
     };
 
     loadAudio();
     return () => {
+      console.log('Unloading audio in FlightSimulator');
       clickSoundRef.current?.unloadAsync();
       passedSoundRef.current?.unloadAsync();
     };
@@ -289,7 +293,12 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
               
               // Play passed sound
               if (settings.soundEnabled && passedSoundRef.current) {
-                passedSoundRef.current.playAsync();
+                console.log('Playing passed sound');
+                passedSoundRef.current.playAsync().catch(error => {
+                  console.log('Error playing passed sound:', error);
+                });
+              } else {
+                console.log('Passed sound not played - settings:', settings.soundEnabled, 'soundRef:', !!passedSoundRef.current);
               }
               // Success haptic feedback
               Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -332,7 +341,12 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
     
     // Play click sound
     if (settings.soundEnabled && clickSoundRef.current) {
-      clickSoundRef.current.playAsync();
+      console.log('Playing click sound in FlightSimulator');
+      clickSoundRef.current.playAsync().catch(error => {
+        console.log('Error playing click sound in FlightSimulator:', error);
+      });
+    } else {
+      console.log('Click sound not played in FlightSimulator - settings:', settings.soundEnabled, 'soundRef:', !!clickSoundRef.current);
     }
     
     // Haptic feedback
