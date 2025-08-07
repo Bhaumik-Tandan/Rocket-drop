@@ -402,14 +402,6 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
           styles.gameArea,
         ]}
       >
-        {/* Pause Button */}
-        <TouchableOpacity 
-          style={styles.pauseButton}
-          onPress={handleDoubleTap}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.pauseButtonText}>⏸️</Text>
-        </TouchableOpacity>
         <Animated.View
           style={{
             transform: [
@@ -784,28 +776,6 @@ const styles = StyleSheet.create({
     zIndex: 1000,
     backgroundColor: 'transparent',
   },
-  pauseButton: {
-    position: 'absolute',
-    top: 50,
-    right: 20,
-    width: 50,
-    height: 50,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#4A90E2',
-    zIndex: 10,
-    shadowColor: '#4A90E2',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.4,
-    shadowRadius: 4,
-    elevation: 6,
-  },
-  pauseButtonText: {
-    fontSize: 20,
-    color: '#FFFFFF',
-  },
+
 
 }); 
