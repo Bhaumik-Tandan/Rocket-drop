@@ -16,6 +16,8 @@ const MAX_VELOCITY_Y = 10;     // Lower max velocity
 const WORLD_SPEED = 2;         // Slower pipe movement
 const PIPE_GAP = 200;          // Much bigger gap between pipes
 const PIPE_WIDTH = 60;
+const VELOCITY_INCREASE_PER_SCORE = 0.1; // Increase velocity by 0.1 for each score
+const MAX_VELOCITY_MULTIPLIER = 3; // Maximum 3x speed
 
 interface Position {
   x: number;
@@ -202,10 +204,14 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
         // Rotation based on velocity (subtle)
         newState.rocket.rotation = Math.max(-0.5, Math.min(0.5, newState.rocket.velocity.y * 0.05));
         
-        // Move space obstacles left
+        // Calculate current velocity based on score
+        const velocityMultiplier = Math.min(1 + (newState.score * VELOCITY_INCREASE_PER_SCORE), MAX_VELOCITY_MULTIPLIER);
+        const currentWorldSpeed = WORLD_SPEED * velocityMultiplier;
+        
+        // Move space obstacles left with increasing speed
         newState.obstacles = newState.obstacles.map(obstacle => ({
           ...obstacle,
-          position: { x: obstacle.position.x - WORLD_SPEED, y: obstacle.position.y }
+          position: { x: obstacle.position.x - currentWorldSpeed, y: obstacle.position.y }
         })).filter(obstacle => obstacle.position.x > -PIPE_WIDTH);
         
         // Spawn new space obstacles continuously - ensure infinite gameplay
@@ -251,7 +257,7 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
         }
         
         // Update distance traveled for infinite feel
-        const distanceTraveled = WORLD_SPEED * 0.1; // Convert pixels to distance units
+        const distanceTraveled = currentWorldSpeed * 0.1; // Convert pixels to distance units
         newState.timeElapsed = Date.now() - newState.gameStartTime;
         gameStateManager.addDistance(distanceTraveled);
         
@@ -273,16 +279,21 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
           // Check if passed obstacle for scoring
           if (!obstacle.passed && obstacle.position.x + PIPE_WIDTH < newState.rocket.position.x) {
             obstacle.passed = true;
-                          if (!obstacle.isTop) { // Only count once per pair
-                newState.score++;
-                gameStateManager.addScore(1);
-                // Play passed sound
-                if (gameState.settings.soundEnabled && passedSoundRef.current) {
-                  passedSoundRef.current.replayAsync();
-                }
-                // Success haptic feedback
-                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            if (!obstacle.isTop) { // Only count once per pair
+              newState.score++;
+              gameStateManager.addScore(1);
+              
+              // Increase velocity based on score
+              const velocityMultiplier = Math.min(1 + (newState.score * VELOCITY_INCREASE_PER_SCORE), MAX_VELOCITY_MULTIPLIER);
+              const newWorldSpeed = WORLD_SPEED * velocityMultiplier;
+              
+              // Play passed sound
+              if (gameState.settings.soundEnabled && passedSoundRef.current) {
+                passedSoundRef.current.replayAsync();
               }
+              // Success haptic feedback
+              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            }
           }
         }
         
