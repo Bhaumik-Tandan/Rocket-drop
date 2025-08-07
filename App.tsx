@@ -10,36 +10,41 @@ import { SettingsScreen } from './src/components/ui/SettingsScreen';
 import { FlightSimulator } from './src/components/game/FlightSimulator';
 import { setAudioEnabled } from './src/utils/audio';
 
-
+// Suppress expo-av deprecation warning
+const originalWarn = console.warn;
+console.warn = (...args) => {
+  if (args[0] && typeof args[0] === 'string' && args[0].includes('expo-av')) {
+    return; // Suppress expo-av deprecation warnings
+  }
+  originalWarn.apply(console, args);
+};
 
 export default function App() {
-  const { 
-    gameMode, 
-    sessionScore, 
-    sessionTime, 
-    sessionDistance, 
-    startSession, 
-    endSession, 
-    setGameMode,
-    settings
-  } = useGameStore();
+  const { gameMode, settings, endSession, setGameMode } = useGameStore();
 
-  // Sync sound setting with audio service
+  // Ensure audio mode follows settings
   useEffect(() => {
     setAudioEnabled(settings.soundEnabled);
   }, [settings.soundEnabled]);
 
+  const handleStartGame = () => {
+    // Play click sound
+    if (settings.soundEnabled) {
+      // Audio will be handled by the game component
+    }
+    
+    // Haptic feedback
+    if (settings.hapticsEnabled) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+  };
+
   const handleGameOver = (score: number, time: number) => {
     // End the session and go back to main menu
     endSession();
-    setGameMode('menu');
+    setGameMode('menu'); // Explicitly set game mode to menu
   };
 
-  const handleStartGame = () => {
-    startSession();
-  };
-
-  // Render based on game mode
   if (gameMode === 'menu') {
     return (
       <SafeAreaProvider>
@@ -78,5 +83,4 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#0B0B2A',
   },
-
 }); 
