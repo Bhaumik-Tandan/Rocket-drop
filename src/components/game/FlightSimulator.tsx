@@ -335,11 +335,13 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
   // Set up game loop
   useEffect(() => {
     const interval = setInterval(() => {
-      gameLoop();
+      if (!gameplayState.gameOver) {
+        gameLoop();
+      }
     }, 16); // ~60 FPS
     
     return () => clearInterval(interval);
-  }, [gameLoop]);
+  }, [gameLoop, gameplayState.gameOver]);
 
   const jump = () => {
     if (gameplayState.gameOver) return;
@@ -556,7 +558,7 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
         <View style={styles.gameOverOverlay}>
           <View style={styles.gameOverCard}>
             <Text style={styles.gameOverTitle}>GAME OVER</Text>
-            <Text style={styles.gameOverSubtitle}>Flight Report</Text>
+            <Text style={styles.gameOverSubtitle}>Final Score</Text>
             <View style={styles.gameOverStatsRow}>
               <View style={styles.gameOverStat}><Text style={styles.gameOverStatNum}>{gameplayState.score}</Text><Text style={styles.gameOverStatLbl}>SCORE</Text></View>
               <View style={styles.gameOverStat}><Text style={styles.gameOverStatNum}>{Math.round(gameplayState.timeElapsed / 1000)}s</Text><Text style={styles.gameOverStatLbl}>TIME</Text></View>
@@ -575,7 +577,7 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
                 onGameOver(gameplayState.score, gameplayState.timeElapsed);
               }}
             >
-              <Text style={styles.gameOverBtnText}>TAP TO CONTINUE</Text>
+              <Text style={styles.gameOverBtnText}>PLAY AGAIN</Text>
             </TouchableOpacity>
           </View>
         </View>
