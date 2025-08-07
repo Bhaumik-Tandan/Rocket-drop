@@ -36,8 +36,9 @@ export default function App() {
   }, [settings.soundEnabled]);
 
   const handleGameOver = (score: number, time: number) => {
-    // Persist run stats; keep rendering the game so we can show an in-game Game Over overlay
+    // End the session and go back to main menu
     endSession();
+    setGameMode('menu');
   };
 
   const handleStartGame = () => {
