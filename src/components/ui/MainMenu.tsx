@@ -117,10 +117,33 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
 
   return (
     <View style={styles.container}>
+      {/* Background Stars - Like the game screen */}
+      <View style={styles.starsContainer}>
+        {Array.from({ length: 100 }).map((_, i) => (
+          <View
+            key={i}
+            style={[
+              styles.star,
+              {
+                left: Math.random() * width,
+                top: Math.random() * height,
+                opacity: Math.random() * 0.8 + 0.2,
+              }
+            ]}
+          />
+        ))}
+      </View>
+
       {/* Settings Button - Top Right */}
       <TouchableOpacity style={styles.settingsButton} onPress={handleSettings} activeOpacity={0.7}>
         <Text style={styles.settingsButtonText}>⚙️</Text>
       </TouchableOpacity>
+
+      {/* Highest Score Display - Top Center */}
+      <View style={styles.highScoreContainer}>
+        <Text style={styles.highScoreLabel}>HIGHEST</Text>
+        <Text style={styles.highScoreValue}>{gameState.stats.bestScore}</Text>
+      </View>
 
       {/* Main Content */}
       <View style={styles.mainContent}>
@@ -135,15 +158,6 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
           <View style={styles.rocket}>
             <Text style={styles.rocketEmoji}>🚀</Text>
           </View>
-          <View style={styles.tapIndicator}>
-            <Text style={styles.tapText}>TAP</Text>
-          </View>
-        </Animated.View>
-
-        {/* Best Score Display */}
-        <Animated.View style={[styles.scoreContainer, { opacity: statsOpacity }]}>
-          <Text style={styles.scoreLabel}>BEST</Text>
-          <Text style={styles.scoreValue}>{gameState.stats.bestScore}</Text>
         </Animated.View>
       </View>
 
@@ -166,6 +180,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#0B0B2A',
   },
+  starsContainer: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+  },
+  star: {
+    position: 'absolute',
+    width: 2,
+    height: 2,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 1,
+  },
   settingsButton: {
     position: 'absolute',
     top: 50,
@@ -183,6 +209,27 @@ const styles = StyleSheet.create({
   settingsButtonText: {
     fontSize: 24,
     color: '#FFFFFF',
+  },
+  highScoreContainer: {
+    position: 'absolute',
+    top: 60,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    zIndex: 5,
+  },
+  highScoreLabel: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    textAlign: 'center',
+    opacity: 0.8,
+    marginBottom: 4,
+  },
+  highScoreValue: {
+    color: '#FFD700',
+    fontSize: 36,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   mainContent: {
     flex: 1,
@@ -224,36 +271,6 @@ const styles = StyleSheet.create({
   },
   rocketEmoji: {
     fontSize: 60,
-  },
-  tapIndicator: {
-    backgroundColor: '#FF6B35',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: '#FFFFFF',
-  },
-  tapText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  scoreContainer: {
-    alignItems: 'center',
-  },
-  scoreLabel: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    textAlign: 'center',
-    opacity: 0.8,
-    marginBottom: 4,
-  },
-  scoreValue: {
-    color: '#FFD700',
-    fontSize: 32,
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
   tapOverlay: {
     position: 'absolute',
