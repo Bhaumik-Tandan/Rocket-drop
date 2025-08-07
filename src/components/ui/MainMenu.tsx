@@ -101,6 +101,11 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
             <View style={styles.noseCone} />
           </View>
         </View>
+        
+        {/* Tap to Play Indicator - Like Flappy Bird */}
+        <View style={styles.tapIndicator}>
+          <Text style={styles.tapText}>TAP TO PLAY</Text>
+        </View>
       </View>
 
       {/* Tap to Start - Invisible overlay */}
@@ -134,19 +139,25 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 50,
     right: 20,
-    width: 50,
-    height: 50,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    borderRadius: 25,
+    width: 44,
+    height: 44,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#4A90E2',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
     zIndex: 10,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
   },
   settingsButtonText: {
-    fontSize: 24,
+    fontSize: 20,
     color: '#FFFFFF',
+    fontWeight: 'bold',
   },
   highScoreContainer: {
     position: 'absolute',
@@ -327,6 +338,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFD700',
     borderRadius: 4,
     transform: [{ rotate: '45deg' }],
+  },
+  tapIndicator: {
+    marginTop: 40,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    alignItems: 'center',
+  },
+  tapText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    letterSpacing: 1,
   },
   tapOverlay: {
     position: 'absolute',
