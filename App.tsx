@@ -28,10 +28,8 @@ export default function App() {
   }, [settings.soundEnabled]);
 
   const handleStartGame = () => {
-    // Play click sound
-    if (settings.soundEnabled) {
-      // Audio will be handled by the game component
-    }
+    // Start the game session
+    setGameMode('playing');
     
     // Haptic feedback
     if (settings.hapticsEnabled) {

@@ -33,21 +33,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
     
-    // Animate UFO moving up
-    Animated.parallel([
-      Animated.timing(ufoPosition, {
-        toValue: height / 2 - 100,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.timing(ufoRotation, {
-        toValue: -0.2,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      onStartGame();
-    });
+    // Start game immediately without animation to avoid getting stuck
+    onStartGame();
   };
 
   const handleSettings = () => {
