@@ -15,6 +15,10 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
   const { settings, stats, setGameMode } = useGameStore();
   const [audioReady, setAudioReady] = useState(false);
   const insets = useSafeAreaInsets();
+  
+  // UFO animation for falling effect
+  const ufoPosition = useRef(new Animated.Value(height / 2 - 50)).current;
+  const ufoRotation = useRef(new Animated.Value(0.3)).current; // Slight downward tilt
 
   useEffect(() => {
     setAudioEnabled(settings.soundEnabled).then(() => setAudioReady(true));
@@ -29,7 +33,21 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
     
-    onStartGame();
+    // Animate UFO moving up
+    Animated.parallel([
+      Animated.timing(ufoPosition, {
+        toValue: height / 2 - 100,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(ufoRotation, {
+        toValue: -0.2,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      onStartGame();
+    });
   };
 
   const handleSettings = () => {
@@ -80,9 +98,22 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
           <Text style={styles.gameSubtitle}>Space Adventure</Text>
         </View>
 
-        {/* Centered UFO - Like Flappy Bird */}
+        {/* Centered UFO - Falling like paused game */}
         <View style={styles.ufoContainer}>
-          <View style={styles.spaceship}>
+          <Animated.View 
+            style={[
+              styles.spaceship,
+              {
+                transform: [
+                  { translateY: ufoPosition },
+                  { rotate: ufoRotation.interpolate({
+                    inputRange: [-1, 1],
+                    outputRange: ['-1rad', '1rad']
+                  })}
+                ]
+              }
+            ]}
+          >
             {/* Main Body */}
             <View style={styles.spaceshipBody}>
               {/* Cockpit with glow */}
@@ -110,18 +141,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
               {/* Nose cone */}
               <View style={styles.noseCone} />
             </View>
-          </View>
-        </View>
-
-        {/* Tap to Play - Centered below UFO */}
-        <View style={styles.playSection}>
-          <TouchableOpacity 
-            style={styles.playButton} 
-            onPress={handleQuickPlay}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.playButtonText}>TAP TO PLAY</Text>
-          </TouchableOpacity>
+          </Animated.View>
         </View>
 
         {/* High Score - Bottom */}
@@ -351,30 +371,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFD700',
     borderRadius: 4,
     transform: [{ rotate: '45deg' }],
-  },
-  playSection: {
-    alignItems: 'center',
-    marginBottom: 40,
-  },
-  playButton: {
-    backgroundColor: 'rgba(74, 144, 226, 0.2)',
-    borderWidth: 2,
-    borderColor: 'rgba(74, 144, 226, 0.6)',
-    borderRadius: 20,
-    paddingVertical: 16,
-    paddingHorizontal: 40,
-    alignItems: 'center',
-    shadowColor: '#4A90E2',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-  },
-  playButtonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    letterSpacing: 1,
   },
   scoreSection: {
     alignItems: 'center',
