@@ -145,6 +145,13 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
           </View>
         </View>
       </View>
+
+      {/* Tap to Start - Invisible overlay for full screen tap */}
+      <TouchableOpacity 
+        style={styles.tapOverlay} 
+        onPress={handleQuickPlay}
+        activeOpacity={1}
+      />
     </View>
   );
 };
