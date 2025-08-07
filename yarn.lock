@@ -2462,11 +2462,6 @@ expo-audio@^0.4.8:
   resolved "https://registry.npmjs.org/expo-audio/-/expo-audio-0.4.8.tgz"
   integrity sha512-tiR4pMNlIBj/r8el8B71EYd61+1mK8sn3ssgMfbhzwKB177b5kgqOoDwjPfBcOFdbF852IGx0Akd1mduXDc6VQ==
 
-expo-av@^15.1.7:
-  version "15.1.7"
-  resolved "https://registry.npmjs.org/expo-av/-/expo-av-15.1.7.tgz"
-  integrity sha512-NC+JR+65sxXfQN1mOHp3QBaXTL2J+BzNwVO27XgUEc5s9NaoBTdHWElYXrfxvik6xwytZ+a7abrqfNNgsbQzsA==
-
 expo-constants@~17.1.7:
   version "17.1.7"
   resolved "https://registry.npmjs.org/expo-constants/-/expo-constants-17.1.7.tgz"
