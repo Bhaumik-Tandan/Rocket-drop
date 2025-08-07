@@ -88,12 +88,12 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
       <View style={styles.curtainOverlay} />
 
       {/* Tap Anywhere Text */}
-      <View style={[styles.tapAnywhereContainer, { marginBottom: insets.bottom + 20 }]}>
+      <View style={[styles.tapAnywhereContainer, { bottom: insets.bottom + 40 }]}>
         <Text style={styles.tapAnywhereText}>TAP ANYWHERE TO PLAY</Text>
       </View>
 
       {/* Game Title */}
-      <View style={styles.titleContainer}>
+      <View style={[styles.titleContainer, { top: insets.top + height * 0.1 }]}>
         <Text style={styles.gameTitle}>SPACE DROP</Text>
         <Text style={styles.gameSubtitle}>Free Play Adventure</Text>
       </View>
@@ -164,8 +164,6 @@ const styles = StyleSheet.create({
   },
   settingsButton: {
     position: 'absolute',
-    top: 50,
-    right: 20,
     width: 44,
     height: 44,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
@@ -186,7 +184,6 @@ const styles = StyleSheet.create({
   },
   highScoreContainer: {
     position: 'absolute',
-    top: 60,
     left: 0,
     right: 0,
     alignItems: 'center',
@@ -223,7 +220,6 @@ const styles = StyleSheet.create({
   },
   tapAnywhereContainer: {
     position: 'absolute',
-    top: 120,
     left: 0,
     right: 0,
     alignItems: 'center',
@@ -400,7 +396,6 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     position: 'absolute',
-    top: height * 0.15,
     left: 0,
     right: 0,
     alignItems: 'center',
