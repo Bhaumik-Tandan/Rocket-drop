@@ -5,13 +5,26 @@
       <stop offset="60%" stop-color="#0B0B2A"/>
       <stop offset="100%" stop-color="#08081E"/>
     </linearGradient>
+    
+    <!-- Moon gradient -->
+    <radialGradient id="moon" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#F5F5F5"/>
+      <stop offset="100%" stop-color="#D3D3D3"/>
+    </radialGradient>
+    
+    <!-- Planet gradient -->
+    <radialGradient id="planet" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#4A90E2"/>
+      <stop offset="100%" stop-color="#357ABD"/>
+    </radialGradient>
+    
     <symbol id="star"><circle r="1" fill="#FFFFFF" opacity="0.7"/></symbol>
   </defs>
 
   <rect width="400" height="800" fill="url(#bg)"/>
 
-  <!-- Minimal stars -->
-  <g opacity="0.5">
+  <!-- Universe stars -->
+  <g opacity="0.6">
     <use href="#star" x="36" y="72"/>
     <use href="#star" x="110" y="96" transform="scale(1.2)"/>
     <use href="#star" x="312" y="88" />
@@ -25,10 +38,31 @@
     <use href="#star" x="70" y="520"/>
     <use href="#star" x="300" y="580"/>
     <use href="#star" x="180" y="740"/>
+    <!-- Additional stars for universe feel -->
+    <use href="#star" x="50" y="150" transform="scale(0.8)"/>
+    <use href="#star" x="280" y="100" transform="scale(0.9)"/>
+    <use href="#star" x="350" y="280" transform="scale(0.7)"/>
+    <use href="#star" x="120" y="400" transform="scale(0.8)"/>
+    <use href="#star" x="250" y="500" transform="scale(0.9)"/>
   </g>
 
-  <!-- Premium rocket design -->
-  <g transform="translate(200,420)">
+  <!-- Moon (target for landing) -->
+  <g transform="translate(300, 150)">
+    <circle cx="0" cy="0" r="40" fill="url(#moon)"/>
+    <circle cx="-10" cy="-10" r="8" fill="#E0E0E0" opacity="0.6"/>
+    <circle cx="15" cy="5" r="4" fill="#E0E0E0" opacity="0.4"/>
+    <circle cx="-5" cy="12" r="6" fill="#E0E0E0" opacity="0.5"/>
+  </g>
+
+  <!-- Small planet in background -->
+  <g transform="translate(80, 600)">
+    <circle cx="0" cy="0" r="20" fill="url(#planet)"/>
+    <circle cx="-5" cy="-5" r="4" fill="#357ABD" opacity="0.6"/>
+    <circle cx="8" cy="3" r="3" fill="#357ABD" opacity="0.4"/>
+  </g>
+
+  <!-- Rocket heading toward moon -->
+  <g transform="translate(200, 420)">
     <!-- rocket matching game design -->
     <g>
       <!-- Rocket glow -->
@@ -57,6 +91,9 @@
       
       <!-- Nose cone (8x8 like in game) -->
       <ellipse cx="0" cy="-10" rx="4" ry="4" fill="#FFD700"/>
+      
+      <!-- Rocket trajectory line -->
+      <path d="M 15,0 Q 80,-25 150,-50" fill="none" stroke="#FFFFFF" stroke-width="1" stroke-dasharray="3,3" opacity="0.3"/>
     </g>
   </g>
 </svg> 
