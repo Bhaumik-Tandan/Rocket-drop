@@ -7,11 +7,11 @@
       <stop offset="100%" style="stop-color:#0B0B2A;stop-opacity:1" />
     </linearGradient>
     <radialGradient id="planetGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.6" />
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.8" />
       <stop offset="100%" style="stop-color:#FFD700;stop-opacity:0" />
     </radialGradient>
     <radialGradient id="rocketGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" style="stop-color:#4A90E2;stop-opacity:0.8" />
+      <stop offset="0%" style="stop-color:#4A90E2;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#4A90E2;stop-opacity:0" />
     </radialGradient>
     <radialGradient id="trailGlow" cx="50%" cy="50%" r="50%">
@@ -19,156 +19,195 @@
       <stop offset="100%" style="stop-color:#FF6B35;stop-opacity:0" />
     </radialGradient>
     <radialGradient id="dustGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.8" />
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0" />
+    </radialGradient>
+    <radialGradient id="engineGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFD700;stop-opacity:0" />
     </radialGradient>
   </defs>
   
   <!-- Background -->
   <rect width="400" height="800" fill="url(#bgGradient)"/>
   
-  <!-- Stars background -->
+  <!-- Enhanced stars background -->
   <g id="stars">
-    <circle cx="30" cy="80" r="1" fill="#FFFFFF" opacity="0.8"/>
-    <circle cx="80" cy="60" r="1.5" fill="#FFFFFF" opacity="0.6"/>
-    <circle cx="150" cy="100" r="1" fill="#FFFFFF" opacity="0.9"/>
-    <circle cx="220" cy="70" r="1.5" fill="#FFFFFF" opacity="0.7"/>
-    <circle cx="280" cy="90" r="1" fill="#FFFFFF" opacity="0.8"/>
-    <circle cx="350" cy="50" r="1.5" fill="#FFFFFF" opacity="0.6"/>
-    <circle cx="50" cy="150" r="1" fill="#FFFFFF" opacity="0.8"/>
-    <circle cx="120" cy="180" r="1.5" fill="#FFFFFF" opacity="0.7"/>
-    <circle cx="190" cy="140" r="1" fill="#FFFFFF" opacity="0.9"/>
-    <circle cx="260" cy="170" r="1.5" fill="#FFFFFF" opacity="0.6"/>
-    <circle cx="330" cy="130" r="1" fill="#FFFFFF" opacity="0.8"/>
-    <circle cx="20" cy="250" r="1.5" fill="#FFFFFF" opacity="0.7"/>
-    <circle cx="90" cy="280" r="1" fill="#FFFFFF" opacity="0.6"/>
-    <circle cx="160" cy="240" r="1.5" fill="#FFFFFF" opacity="0.8"/>
-    <circle cx="230" cy="270" r="1" fill="#FFFFFF" opacity="0.7"/>
-    <circle cx="300" cy="230" r="1.5" fill="#FFFFFF" opacity="0.9"/>
-    <circle cx="370" cy="260" r="1" fill="#FFFFFF" opacity="0.6"/>
-    <circle cx="40" cy="350" r="1" fill="#FFFFFF" opacity="0.8"/>
-    <circle cx="110" cy="380" r="1.5" fill="#FFFFFF" opacity="0.7"/>
-    <circle cx="180" cy="340" r="1" fill="#FFFFFF" opacity="0.9"/>
-    <circle cx="250" cy="370" r="1.5" fill="#FFFFFF" opacity="0.6"/>
-    <circle cx="320" cy="330" r="1" fill="#FFFFFF" opacity="0.8"/>
-    <circle cx="30" cy="450" r="1.5" fill="#FFFFFF" opacity="0.7"/>
-    <circle cx="100" cy="480" r="1" fill="#FFFFFF" opacity="0.6"/>
-    <circle cx="170" cy="440" r="1.5" fill="#FFFFFF" opacity="0.8"/>
-    <circle cx="240" cy="470" r="1" fill="#FFFFFF" opacity="0.7"/>
-    <circle cx="310" cy="430" r="1.5" fill="#FFFFFF" opacity="0.9"/>
-    <circle cx="380" cy="460" r="1" fill="#FFFFFF" opacity="0.6"/>
-    <circle cx="50" cy="550" r="1" fill="#FFFFFF" opacity="0.8"/>
-    <circle cx="120" cy="580" r="1.5" fill="#FFFFFF" opacity="0.7"/>
-    <circle cx="190" cy="540" r="1" fill="#FFFFFF" opacity="0.9"/>
-    <circle cx="260" cy="570" r="1.5" fill="#FFFFFF" opacity="0.6"/>
-    <circle cx="330" cy="530" r="1" fill="#FFFFFF" opacity="0.8"/>
-    <circle cx="20" cy="650" r="1.5" fill="#FFFFFF" opacity="0.7"/>
-    <circle cx="90" cy="680" r="1" fill="#FFFFFF" opacity="0.6"/>
-    <circle cx="160" cy="640" r="1.5" fill="#FFFFFF" opacity="0.8"/>
-    <circle cx="230" cy="670" r="1" fill="#FFFFFF" opacity="0.7"/>
-    <circle cx="300" cy="630" r="1.5" fill="#FFFFFF" opacity="0.9"/>
-    <circle cx="370" cy="660" r="1" fill="#FFFFFF" opacity="0.6"/>
-    <circle cx="40" cy="750" r="1" fill="#FFFFFF" opacity="0.8"/>
-    <circle cx="110" cy="780" r="1.5" fill="#FFFFFF" opacity="0.7"/>
-    <circle cx="180" cy="740" r="1" fill="#FFFFFF" opacity="0.9"/>
-    <circle cx="250" cy="770" r="1.5" fill="#FFFFFF" opacity="0.6"/>
-    <circle cx="320" cy="730" r="1" fill="#FFFFFF" opacity="0.8"/>
+    <circle cx="30" cy="80" r="1" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="80" cy="60" r="1.5" fill="#FFFFFF" opacity="0.7"/>
+    <circle cx="150" cy="100" r="1" fill="#FFFFFF" opacity="1"/>
+    <circle cx="220" cy="70" r="1.5" fill="#FFFFFF" opacity="0.8"/>
+    <circle cx="280" cy="90" r="1" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="350" cy="50" r="1.5" fill="#FFFFFF" opacity="0.7"/>
+    <circle cx="50" cy="150" r="1" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="120" cy="180" r="1.5" fill="#FFFFFF" opacity="0.8"/>
+    <circle cx="190" cy="140" r="1" fill="#FFFFFF" opacity="1"/>
+    <circle cx="260" cy="170" r="1.5" fill="#FFFFFF" opacity="0.7"/>
+    <circle cx="330" cy="130" r="1" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="20" cy="250" r="1.5" fill="#FFFFFF" opacity="0.8"/>
+    <circle cx="90" cy="280" r="1" fill="#FFFFFF" opacity="0.7"/>
+    <circle cx="160" cy="240" r="1.5" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="230" cy="270" r="1" fill="#FFFFFF" opacity="0.8"/>
+    <circle cx="300" cy="230" r="1.5" fill="#FFFFFF" opacity="1"/>
+    <circle cx="370" cy="260" r="1" fill="#FFFFFF" opacity="0.7"/>
+    <circle cx="40" cy="350" r="1" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="110" cy="380" r="1.5" fill="#FFFFFF" opacity="0.8"/>
+    <circle cx="180" cy="340" r="1" fill="#FFFFFF" opacity="1"/>
+    <circle cx="250" cy="370" r="1.5" fill="#FFFFFF" opacity="0.7"/>
+    <circle cx="320" cy="330" r="1" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="30" cy="450" r="1.5" fill="#FFFFFF" opacity="0.8"/>
+    <circle cx="100" cy="480" r="1" fill="#FFFFFF" opacity="0.7"/>
+    <circle cx="170" cy="440" r="1.5" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="240" cy="470" r="1" fill="#FFFFFF" opacity="0.8"/>
+    <circle cx="310" cy="430" r="1.5" fill="#FFFFFF" opacity="1"/>
+    <circle cx="380" cy="460" r="1" fill="#FFFFFF" opacity="0.7"/>
+    <circle cx="50" cy="550" r="1" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="120" cy="580" r="1.5" fill="#FFFFFF" opacity="0.8"/>
+    <circle cx="190" cy="540" r="1" fill="#FFFFFF" opacity="1"/>
+    <circle cx="260" cy="570" r="1.5" fill="#FFFFFF" opacity="0.7"/>
+    <circle cx="330" cy="530" r="1" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="20" cy="650" r="1.5" fill="#FFFFFF" opacity="0.8"/>
+    <circle cx="90" cy="680" r="1" fill="#FFFFFF" opacity="0.7"/>
+    <circle cx="160" cy="640" r="1.5" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="230" cy="670" r="1" fill="#FFFFFF" opacity="0.8"/>
+    <circle cx="300" cy="630" r="1.5" fill="#FFFFFF" opacity="1"/>
+    <circle cx="370" cy="660" r="1" fill="#FFFFFF" opacity="0.7"/>
+    <circle cx="40" cy="750" r="1" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="110" cy="780" r="1.5" fill="#FFFFFF" opacity="0.8"/>
+    <circle cx="180" cy="740" r="1" fill="#FFFFFF" opacity="1"/>
+    <circle cx="250" cy="770" r="1.5" fill="#FFFFFF" opacity="0.7"/>
+    <circle cx="320" cy="730" r="1" fill="#FFFFFF" opacity="0.9"/>
+    
+    <!-- Additional bright stars -->
+    <circle cx="60" cy="120" r="2" fill="#00FFFF" opacity="0.6"/>
+    <circle cx="280" cy="80" r="2" fill="#FFD700" opacity="0.5"/>
+    <circle cx="140" cy="200" r="2" fill="#FF6B35" opacity="0.4"/>
+    <circle cx="320" cy="300" r="2" fill="#00FFFF" opacity="0.6"/>
+    <circle cx="80" cy="400" r="2" fill="#FFD700" opacity="0.5"/>
   </g>
   
-  <!-- Planet surface -->
+  <!-- Enhanced planet surface -->
   <g transform="translate(200, 750)">
     <!-- Planet glow -->
-    <circle cx="0" cy="0" r="150" fill="url(#planetGlow)" opacity="0.3"/>
+    <circle cx="0" cy="0" r="180" fill="url(#planetGlow)" opacity="0.4"/>
     
-    <!-- Planet surface -->
-    <ellipse cx="0" cy="0" rx="200" ry="80" fill="#8B4513" opacity="0.9"/>
-    <ellipse cx="0" cy="0" rx="180" ry="60" fill="#A0522D" opacity="0.8"/>
+    <!-- Planet surface with more detail -->
+    <ellipse cx="0" cy="0" rx="220" ry="90" fill="#8B4513" opacity="0.95"/>
+    <ellipse cx="0" cy="0" rx="200" ry="70" fill="#A0522D" opacity="0.9"/>
+    <ellipse cx="0" cy="0" rx="180" ry="50" fill="#CD853F" opacity="0.8"/>
     
     <!-- Planet surface details -->
-    <circle cx="-50" cy="-20" r="15" fill="#CD853F" opacity="0.7"/>
-    <circle cx="30" cy="-30" r="12" fill="#A0522D" opacity="0.8"/>
-    <circle cx="60" cy="-10" r="18" fill="#CD853F" opacity="0.6"/>
-    <circle cx="-80" cy="10" r="10" fill="#A0522D" opacity="0.7"/>
-    <circle cx="90" cy="20" r="14" fill="#CD853F" opacity="0.8"/>
+    <circle cx="-60" cy="-25" r="18" fill="#CD853F" opacity="0.8"/>
+    <circle cx="40" cy="-35" r="15" fill="#A0522D" opacity="0.9"/>
+    <circle cx="70" cy="-15" r="20" fill="#CD853F" opacity="0.7"/>
+    <circle cx="-90" cy="15" r="12" fill="#A0522D" opacity="0.8"/>
+    <circle cx="100" cy="25" r="16" fill="#CD853F" opacity="0.9"/>
+    <circle cx="-40" cy="30" r="14" fill="#A0522D" opacity="0.8"/>
+    <circle cx="50" cy="40" r="11" fill="#CD853F" opacity="0.7"/>
+    <circle cx="-70" cy="-10" r="9" fill="#A0522D" opacity="0.9"/>
+    <circle cx="30" cy="-45" r="13" fill="#CD853F" opacity="0.8"/>
   </g>
   
-  <!-- Launch pad -->
+  <!-- Enhanced launch pad -->
   <g transform="translate(200, 720)">
-    <!-- Launch pad base -->
-    <rect x="-40" y="0" width="80" height="20" fill="#696969" opacity="0.9"/>
-    <rect x="-35" y="5" width="70" height="10" fill="#808080" opacity="0.8"/>
+    <!-- Launch pad base with better detail -->
+    <rect x="-45" y="0" width="90" height="25" fill="#696969" opacity="0.95"/>
+    <rect x="-40" y="5" width="80" height="15" fill="#808080" opacity="0.9"/>
+    <rect x="-35" y="8" width="70" height="9" fill="#A0A0A0" opacity="0.8"/>
     
     <!-- Launch pad supports -->
-    <rect x="-50" y="0" width="8" height="30" fill="#4A4A4A" opacity="0.8"/>
-    <rect x="42" y="0" width="8" height="30" fill="#4A4A4A" opacity="0.8"/>
+    <rect x="-55" y="0" width="10" height="35" fill="#4A4A4A" opacity="0.9"/>
+    <rect x="45" y="0" width="10" height="35" fill="#4A4A4A" opacity="0.9"/>
+    <rect x="-50" y="0" width="8" height="30" fill="#5A5A5A" opacity="0.8"/>
+    <rect x="42" y="0" width="8" height="30" fill="#5A5A5A" opacity="0.8"/>
     
     <!-- Launch pad lights -->
-    <circle cx="-30" cy="10" r="3" fill="#FFD700" opacity="0.8"/>
-    <circle cx="30" cy="10" r="3" fill="#FFD700" opacity="0.8"/>
-    <circle cx="0" cy="15" r="2" fill="#FF6B35" opacity="0.7"/>
+    <circle cx="-35" cy="12" r="4" fill="#FFD700" opacity="0.9"/>
+    <circle cx="35" cy="12" r="4" fill="#FFD700" opacity="0.9"/>
+    <circle cx="0" cy="18" r="3" fill="#FF6B35" opacity="0.8"/>
+    <circle cx="-20" cy="15" r="2" fill="#00FFFF" opacity="0.7"/>
+    <circle cx="20" cy="15" r="2" fill="#00FFFF" opacity="0.7"/>
   </g>
   
-  <!-- Dust and smoke effects -->
+  <!-- Enhanced dust and smoke effects -->
   <g id="dustEffects">
     <!-- Dust cloud 1 -->
-    <ellipse cx="180" cy="700" rx="30" ry="20" fill="url(#dustGlow)" opacity="0.6"/>
-    <ellipse cx="220" cy="690" rx="25" ry="15" fill="url(#dustGlow)" opacity="0.5"/>
-    <ellipse cx="160" cy="710" rx="20" ry="12" fill="url(#dustGlow)" opacity="0.7"/>
+    <ellipse cx="180" cy="700" rx="35" ry="25" fill="url(#dustGlow)" opacity="0.7"/>
+    <ellipse cx="220" cy="690" rx="30" ry="18" fill="url(#dustGlow)" opacity="0.6"/>
+    <ellipse cx="160" cy="710" rx="25" ry="15" fill="url(#dustGlow)" opacity="0.8"/>
     
     <!-- Dust cloud 2 -->
-    <ellipse cx="190" cy="680" rx="35" ry="25" fill="url(#dustGlow)" opacity="0.4"/>
-    <ellipse cx="210" cy="670" rx="28" ry="18" fill="url(#dustGlow)" opacity="0.6"/>
+    <ellipse cx="190" cy="680" rx="40" ry="30" fill="url(#dustGlow)" opacity="0.5"/>
+    <ellipse cx="210" cy="670" rx="32" ry="22" fill="url(#dustGlow)" opacity="0.7"/>
+    <ellipse cx="170" cy="690" rx="28" ry="20" fill="url(#dustGlow)" opacity="0.6"/>
+    
+    <!-- Additional smoke trails -->
+    <ellipse cx="185" cy="675" rx="20" ry="12" fill="url(#dustGlow)" opacity="0.4"/>
+    <ellipse cx="215" cy="665" rx="18" ry="10" fill="url(#dustGlow)" opacity="0.5"/>
   </g>
   
-  <!-- Rocket trail glow -->
+  <!-- Enhanced rocket trail glow -->
   <g transform="translate(200, 400)">
-    <!-- Trail glow effect -->
-    <ellipse cx="0" cy="0" rx="80" ry="30" fill="url(#trailGlow)" opacity="0.6" transform="rotate(-90)"/>
-    <ellipse cx="0" cy="0" rx="60" ry="20" fill="url(#trailGlow)" opacity="0.8" transform="rotate(-90)"/>
-    <ellipse cx="0" cy="0" rx="40" ry="15" fill="url(#trailGlow)" opacity="0.9" transform="rotate(-90)"/>
+    <!-- Multiple trail layers for depth -->
+    <ellipse cx="0" cy="0" rx="100" ry="40" fill="url(#trailGlow)" opacity="0.5" transform="rotate(-90)"/>
+    <ellipse cx="0" cy="0" rx="80" ry="30" fill="url(#trailGlow)" opacity="0.7" transform="rotate(-90)"/>
+    <ellipse cx="0" cy="0" rx="60" ry="20" fill="url(#trailGlow)" opacity="0.9" transform="rotate(-90)"/>
+    <ellipse cx="0" cy="0" rx="40" ry="15" fill="url(#trailGlow)" opacity="1" transform="rotate(-90)"/>
   </g>
   
-  <!-- Rocket -->
+  <!-- Enhanced Rocket -->
   <g transform="translate(200, 400)">
-    <!-- Rocket glow -->
-    <ellipse cx="0" cy="0" rx="40" ry="20" fill="url(#rocketGlow)" opacity="0.6"/>
+    <!-- Enhanced rocket glow -->
+    <ellipse cx="0" cy="0" rx="50" ry="25" fill="url(#rocketGlow)" opacity="0.7"/>
     
-    <!-- Rocket body -->
-    <path d="M-10,-30 L10,-30 L8,30 L-8,30 Z" fill="#4A90E2" stroke="#357ABD" stroke-width="2"/>
-    <path d="M-8,-25 L8,-25 L6,25 L-6,25 Z" fill="#357ABD" opacity="0.8"/>
+    <!-- Rocket body with better detail -->
+    <path d="M-12,-35 L12,-35 L10,35 L-10,35 Z" fill="#4A90E2" stroke="#357ABD" stroke-width="2.5"/>
+    <path d="M-10,-30 L10,-30 L8,30 L-8,30 Z" fill="#357ABD" opacity="0.9"/>
     
-    <!-- Rocket cockpit -->
-    <ellipse cx="0" cy="-15" rx="6" ry="4" fill="#87CEEB" stroke="#FFFFFF" stroke-width="1"/>
-    <ellipse cx="0" cy="-15" rx="4" ry="2.5" fill="#FFFFFF" opacity="0.7"/>
+    <!-- Rocket cockpit with enhanced detail -->
+    <ellipse cx="0" cy="-18" rx="7" ry="5" fill="#87CEEB" stroke="#FFFFFF" stroke-width="1.5"/>
+    <ellipse cx="0" cy="-18" rx="5" ry="3" fill="#FFFFFF" opacity="0.8"/>
+    <ellipse cx="0" cy="-19" rx="3" ry="1.5" fill="#E0F6FF" opacity="0.9"/>
     
-    <!-- Rocket fins -->
-    <path d="M-8,30 L-12,40 L-6,30 Z" fill="#2E5C8A" stroke="#1E3A5F" stroke-width="0.5"/>
-    <path d="M8,30 L12,40 L6,30 Z" fill="#2E5C8A" stroke="#1E3A5F" stroke-width="0.5"/>
+    <!-- Enhanced rocket fins -->
+    <path d="M-10,35 L-15,45 L-7,35 Z" fill="#2E5C8A" stroke="#1E3A5F" stroke-width="1"/>
+    <path d="M10,35 L15,45 L7,35 Z" fill="#2E5C8A" stroke="#1E3A5F" stroke-width="1"/>
+    <path d="M-9,35 L-13,43 L-8,35 Z" fill="#1E3A5F" opacity="0.8"/>
+    <path d="M9,35 L13,43 L8,35 Z" fill="#1E3A5F" opacity="0.8"/>
     
-    <!-- Rocket engine -->
-    <path d="M-4,30 L0,45 L4,30 Z" fill="#FF6B35" stroke="#FF8C00" stroke-width="0.5"/>
-    <path d="M-3,30 L0,42 L3,30 Z" fill="#FF8C00" opacity="0.8"/>
+    <!-- Enhanced rocket engine -->
+    <path d="M-5,35 L0,50 L5,35 Z" fill="#FF6B35" stroke="#FF8C00" stroke-width="1"/>
+    <path d="M-4,35 L0,48 L4,35 Z" fill="#FF8C00" opacity="0.9"/>
     
-    <!-- Engine flame -->
-    <path d="M-3,30 L0,60 L3,30 Z" fill="url(#trailGlow)" opacity="0.9"/>
-    <path d="M-2,30 L0,50 L2,30 Z" fill="#FFD700" opacity="0.8"/>
+    <!-- Enhanced engine flame with multiple layers -->
+    <path d="M-4,35 L0,70 L4,35 Z" fill="url(#trailGlow)" opacity="1"/>
+    <path d="M-3,35 L0,65 L3,35 Z" fill="url(#engineGlow)" opacity="0.9"/>
+    <path d="M-2,35 L0,60 L2,35 Z" fill="#FFD700" opacity="1"/>
+    
+    <!-- Rocket details -->
+    <rect x="-8" y="-12" width="16" height="2" fill="#2E5C8A" opacity="0.8"/>
+    <rect x="-6" y="5" width="12" height="1.5" fill="#2E5C8A" opacity="0.8"/>
+    <rect x="-5" y="18" width="10" height="1" fill="#2E5C8A" opacity="0.8"/>
   </g>
   
-  <!-- Game title with glow effect -->
-  <text x="200" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="42" font-weight="bold" fill="#FFFFFF" opacity="0.9">
+  <!-- Enhanced game title with multiple glow layers -->
+  <text x="200" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="44" font-weight="bold" fill="#FFFFFF" opacity="1">
     COSMIC DASH
   </text>
-  <text x="200" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="42" font-weight="bold" fill="#00FFFF" opacity="0.4">
+  <text x="200" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="44" font-weight="bold" fill="#00FFFF" opacity="0.6">
+    COSMIC DASH
+  </text>
+  <text x="200" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="44" font-weight="bold" fill="#00FFFF" opacity="0.3">
     COSMIC DASH
   </text>
   
-  <!-- Subtitle -->
-  <text x="200" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#CCCCCC" opacity="0.8">
+  <!-- Enhanced subtitle -->
+  <text x="200" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#CCCCCC" opacity="0.9">
     Space Adventure
   </text>
   
-  <!-- Tap to play text -->
-  <text x="200" y="650" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#FFFFFF" opacity="0.7">
+  <!-- Enhanced tap to play text -->
+  <text x="200" y="650" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#FFFFFF" opacity="0.8">
     TAP TO PLAY
   </text>
 </svg> 
