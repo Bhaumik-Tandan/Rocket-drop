@@ -6,16 +6,29 @@
       <stop offset="100%" stop-color="#08081E"/>
     </linearGradient>
     
+    <!-- Planet gradient -->
+    <radialGradient id="planet" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#87CEEB"/>
+      <stop offset="100%" stop-color="#4A90E2"/>
+    </radialGradient>
+    
     <!-- Moon gradient -->
     <radialGradient id="moon" cx="30%" cy="30%" r="70%">
       <stop offset="0%" stop-color="#F5F5F5"/>
       <stop offset="100%" stop-color="#D3D3D3"/>
     </radialGradient>
     
-    <!-- Planet gradient -->
-    <radialGradient id="planet" cx="40%" cy="40%" r="60%">
-      <stop offset="0%" stop-color="#4A90E2"/>
-      <stop offset="100%" stop-color="#357ABD"/>
+    <!-- UFO metallic gradient -->
+    <linearGradient id="ufo" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2C2C2C"/>
+      <stop offset="50%" stop-color="#404040"/>
+      <stop offset="100%" stop-color="#1A1A1A"/>
+    </linearGradient>
+    
+    <!-- UFO dome gradient -->
+    <radialGradient id="ufoDome" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#87CEEB"/>
+      <stop offset="100%" stop-color="#4A90E2"/>
     </radialGradient>
     
     <symbol id="star"><circle r="1" fill="#FFFFFF" opacity="0.7"/></symbol>
@@ -38,7 +51,6 @@
     <use href="#star" x="70" y="520"/>
     <use href="#star" x="300" y="580"/>
     <use href="#star" x="180" y="740"/>
-    <!-- Additional stars for universe feel -->
     <use href="#star" x="50" y="150" transform="scale(0.8)"/>
     <use href="#star" x="280" y="100" transform="scale(0.9)"/>
     <use href="#star" x="350" y="280" transform="scale(0.7)"/>
@@ -46,54 +58,67 @@
     <use href="#star" x="250" y="500" transform="scale(0.9)"/>
   </g>
 
-  <!-- Moon (target for landing) -->
-  <g transform="translate(300, 150)">
-    <circle cx="0" cy="0" r="40" fill="url(#moon)"/>
-    <circle cx="-10" cy="-10" r="8" fill="#E0E0E0" opacity="0.6"/>
-    <circle cx="15" cy="5" r="4" fill="#E0E0E0" opacity="0.4"/>
-    <circle cx="-5" cy="12" r="6" fill="#E0E0E0" opacity="0.5"/>
+  <!-- Planet in bottom left -->
+  <g transform="translate(80, 700)">
+    <circle cx="0" cy="0" r="30" fill="url(#planet)"/>
+    <circle cx="-8" cy="-8" r="6" fill="#4A90E2" opacity="0.6"/>
+    <circle cx="10" cy="5" r="4" fill="#4A90E2" opacity="0.4"/>
   </g>
 
-  <!-- Small planet in background -->
-  <g transform="translate(80, 600)">
-    <circle cx="0" cy="0" r="20" fill="url(#planet)"/>
-    <circle cx="-5" cy="-5" r="4" fill="#357ABD" opacity="0.6"/>
-    <circle cx="8" cy="3" r="3" fill="#357ABD" opacity="0.4"/>
+  <!-- Moon in upper right -->
+  <g transform="translate(320, 120)">
+    <circle cx="0" cy="0" r="20" fill="url(#moon)"/>
+    <circle cx="-5" cy="-5" r="4" fill="#E0E0E0" opacity="0.6"/>
+    <circle cx="8" cy="3" r="3" fill="#E0E0E0" opacity="0.4"/>
   </g>
 
-  <!-- Rocket heading toward moon -->
-  <g transform="translate(200, 420)">
-    <!-- rocket matching game design -->
-    <g>
-      <!-- Rocket glow -->
-      <ellipse cx="0" cy="-6" rx="28" ry="14" fill="#8FCBFF" opacity="0.25"/>
-      
-      <!-- Rocket body (30x24 like in game) -->
-      <ellipse cx="0" cy="0" rx="15" ry="12" fill="#4A90E2" stroke="#357ABD" stroke-width="2"/>
-      <ellipse cx="0" cy="0" rx="13" ry="10" fill="#357ABD" opacity="0.9"/>
-      
-      <!-- Cockpit (16x12 like in game) -->
-      <ellipse cx="0" cy="-4" rx="8" ry="6" fill="#87CEEB" stroke="#FFFFFF" stroke-width="1"/>
-      <ellipse cx="0" cy="-4" rx="5" ry="3" fill="#FFFFFF" opacity="0.8"/>
-      
-      <!-- Wings (42x8 like in game) -->
-      <rect x="-10.5" y="-2" width="21" height="4" fill="#2E5C8A" rx="2"/>
-      <rect x="-14.5" y="-2" width="4" height="4" fill="#1E3A5F" rx="1"/>
-      <rect x="10.5" y="-2" width="4" height="4" fill="#1E3A5F" rx="1"/>
-      
-      <!-- Engine (12x10 like in game) -->
-      <ellipse cx="0" cy="8.5" rx="6" ry="5" fill="#FF6B35"/>
-      <ellipse cx="0" cy="8.5" rx="4" ry="3" fill="#FF6B35" opacity="0.9"/>
-      
-      <!-- Side panels (4x12 like in game) -->
-      <rect x="-17" y="-3" width="2" height="6" fill="#357ABD" rx="1"/>
-      <rect x="15" y="-3" width="2" height="6" fill="#357ABD" rx="1"/>
-      
-      <!-- Nose cone (8x8 like in game) -->
-      <ellipse cx="0" cy="-10" rx="4" ry="4" fill="#FFD700"/>
-      
-      <!-- Rocket trajectory line -->
-      <path d="M 15,0 Q 80,-25 150,-50" fill="none" stroke="#FFFFFF" stroke-width="1" stroke-dasharray="3,3" opacity="0.3"/>
-    </g>
+  <!-- Rock formations (left and right pillars) -->
+  <g>
+    <!-- Left rock formation -->
+    <rect x="20" y="50" width="40" height="700" fill="#2C2C2C" rx="10"/>
+    <rect x="25" y="60" width="30" height="680" fill="#1A1A1A" rx="8"/>
+    <rect x="30" y="70" width="20" height="660" fill="#404040" rx="5"/>
+    
+    <!-- Right rock formation -->
+    <rect x="340" y="50" width="40" height="700" fill="#2C2C2C" rx="10"/>
+    <rect x="345" y="60" width="30" height="680" fill="#1A1A1A" rx="8"/>
+    <rect x="350" y="70" width="20" height="660" fill="#404040" rx="5"/>
+  </g>
+
+  <!-- Shooting star/laser beam -->
+  <g transform="translate(300, 200)">
+    <path d="M0,0 L-60,40" stroke="#4A90E2" stroke-width="2" opacity="0.8"/>
+    <path d="M0,0 L-50,35" stroke="#87CEEB" stroke-width="1" opacity="0.9"/>
+  </g>
+
+  <!-- Game Title -->
+  <g transform="translate(200, 180)" text-anchor="middle" font-family="Arial, sans-serif">
+    <text y="0" font-size="44" font-weight="bold" fill="#FFFFFF">COSMIC</text>
+    <text y="50" font-size="44" font-weight="bold" fill="#FFFFFF">DASH</text>
+    <text y="80" font-size="16" fill="#BFC7D6" opacity="0.85">Space Adventure</text>
+  </g>
+
+  <!-- UFO Flying Saucer -->
+  <g transform="translate(200, 520)">
+    <!-- UFO body (main disc) -->
+    <ellipse cx="0" cy="0" rx="40" ry="12" fill="url(#ufo)"/>
+    <ellipse cx="0" cy="0" rx="35" ry="10" fill="#1A1A1A" opacity="0.8"/>
+    
+    <!-- UFO dome -->
+    <ellipse cx="0" cy="-8" rx="25" ry="10" fill="url(#ufoDome)"/>
+    <ellipse cx="0" cy="-8" rx="20" ry="8" fill="#4A90E2" opacity="0.6"/>
+    
+    <!-- UFO details -->
+    <ellipse cx="-15" cy="0" rx="4" ry="2" fill="#FFD700"/>
+    <ellipse cx="15" cy="0" rx="4" ry="2" fill="#FFD700"/>
+    <ellipse cx="0" cy="5" rx="3" ry="1.5" fill="#FFD700"/>
+    
+    <!-- Glowing orange propulsion light -->
+    <ellipse cx="0" cy="15" rx="30" ry="10" fill="#FF6B35" opacity="0.8"/>
+    <ellipse cx="0" cy="18" rx="20" ry="8" fill="#FFD700" opacity="0.9"/>
+    <ellipse cx="0" cy="20" rx="10" ry="5" fill="#FFFFFF" opacity="0.7"/>
+    
+    <!-- UFO ambient glow -->
+    <ellipse cx="0" cy="0" rx="50" ry="20" fill="#87CEEB" opacity="0.1"/>
   </g>
 </svg> 
