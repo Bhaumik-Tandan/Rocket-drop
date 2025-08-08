@@ -24,15 +24,10 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
     if (settings.soundEnabled && audioReady) {
       // Play click sound
       await playClick();
-      
-      // Small delay for smooth transition
-      setTimeout(() => {
-        onStartGame();
-      }, 150);
-    } else {
-      // If audio is disabled, start immediately
-      onStartGame();
     }
+    
+    // Start game immediately - no transition
+    onStartGame();
     
     if (settings.hapticsEnabled) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -118,6 +113,9 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
               <View style={styles.noseCone} />
             </View>
           </View>
+          
+          {/* Tap to Play Text */}
+          <Text style={styles.tapToPlayText}>TAP TO PLAY</Text>
         </View>
 
         {/* High Score - Bottom */}
@@ -140,7 +138,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0A0A1A',
+    backgroundColor: '#0B0B2A', // Match game background color
   },
   starsContainer: {
     position: 'absolute',
@@ -377,5 +375,12 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: 'transparent',
     zIndex: 5,
+  },
+  tapToPlayText: {
+    fontSize: 18,
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    marginTop: 20,
+    opacity: 0.7,
   },
 }); 

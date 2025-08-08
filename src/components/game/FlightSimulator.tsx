@@ -105,9 +105,9 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
   const { settings, addScore, setGameMode, setPaused, isPaused } = useGameStore();
   const [gameplayState, setGameplayState] = useState<GameplayState>({
     rocket: {
-      position: { x: 100, y: height / 2 },
-      velocity: { x: 0, y: 0 },
-      rotation: 0,
+      position: { x: width / 2, y: height / 2 }, // Center position like main menu
+      velocity: { x: 0, y: -JUMP_POWER }, // Start with upward movement like first tap
+      rotation: 0.2, // Same tilt as main menu
     },
     obstacles: [],
     particles: [],
@@ -147,9 +147,9 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
   const initializeGame = async () => {
     setGameplayState({
       rocket: {
-        position: { x: 100, y: height / 2 },
-        velocity: { x: 0, y: JUMP_POWER }, // Start with upward movement
-        rotation: -0.3, // Slight upward tilt
+        position: { x: width / 2, y: height / 2 }, // Center position like main menu
+        velocity: { x: 0, y: -JUMP_POWER }, // Start with upward movement like first tap
+        rotation: 0.2, // Same tilt as main menu
       },
       obstacles: [],
       particles: [],
