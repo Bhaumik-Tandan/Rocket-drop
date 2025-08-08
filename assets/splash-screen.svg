@@ -5,9 +5,6 @@
       <stop offset="60%" stop-color="#0B0B2A"/>
       <stop offset="100%" stop-color="#08081E"/>
     </linearGradient>
-    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="6"/>
-    </filter>
     <symbol id="star"><circle r="1.2" fill="#FFFFFF" /></symbol>
   </defs>
 
@@ -32,14 +29,15 @@
 
   <!-- Rocket with vertical trail - matching game design -->
   <g transform="translate(200,420)">
-    <!-- trail -->
-    <path d="M0,20 L0,140" stroke="#FF7A3C" stroke-width="10" stroke-linecap="round" opacity="0.45" filter="url(#glow)"/>
-    <path d="M0,20 L0,120" stroke="#FFD25A" stroke-width="4" stroke-linecap="round" opacity="0.9" filter="url(#glow)"/>
-
+    <!-- trail with better fire effect -->
+    <path d="M0,20 L0,140" stroke="#FF7A3C" stroke-width="10" stroke-linecap="round" opacity="0.6"/>
+    <path d="M0,20 L0,120" stroke="#FFD25A" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+    <path d="M0,20 L0,100" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
+    
     <!-- rocket matching game design -->
     <g>
       <!-- Rocket glow -->
-      <ellipse cx="0" cy="-6" rx="28" ry="14" fill="#8FCBFF" opacity="0.35" filter="url(#glow)"/>
+      <ellipse cx="0" cy="-6" rx="28" ry="14" fill="#8FCBFF" opacity="0.35"/>
       
       <!-- Rocket body (30x24 like in game) -->
       <ellipse cx="0" cy="0" rx="15" ry="12" fill="#4A90E2" stroke="#357ABD" stroke-width="2"/>
@@ -65,9 +63,10 @@
       <!-- Nose cone (8x8 like in game) -->
       <ellipse cx="0" cy="-10" rx="4" ry="4" fill="#FFD700"/>
       
-      <!-- Engine flame -->
-      <path d="M -3,13.5 L 0,25 L 3,13.5 Z" fill="#FFD700" opacity="0.9" filter="url(#glow)"/>
-      <path d="M -2,13.5 L 0,22 L 2,13.5 Z" fill="#FF6B35" opacity="0.8"/>
+      <!-- Engine flame with better effect -->
+      <path d="M -4,13.5 L 0,35 L 4,13.5 Z" fill="#FFD700" opacity="0.9"/>
+      <path d="M -3,13.5 L 0,30 L 3,13.5 Z" fill="#FF6B35" opacity="0.8"/>
+      <path d="M -2,13.5 L 0,25 L 2,13.5 Z" fill="#FFFFFF" opacity="0.7"/>
     </g>
   </g>
 </svg> 
