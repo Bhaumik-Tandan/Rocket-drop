@@ -62,9 +62,10 @@ def detect_rectangle(image):
             x, y, w, h = cv2.boundingRect(contour)
             aspect_ratio = w / h if h > 0 else 0
             
-            # Look for rectangular shapes (aspect ratio between 0.4 and 0.6 for splash screen)
-            if 0.4 <= aspect_ratio <= 0.6:
+            # Look for rectangular shapes (aspect ratio between 0.3 and 0.8 for splash screen)
+            if 0.3 <= aspect_ratio <= 0.8:
                 rectangles.append((x, y, w, h, area))
+                print(f"Found rectangle: {x}, {y}, {w}, {h}, aspect_ratio: {aspect_ratio:.2f}, area: {area}")
     
     if rectangles:
         # Get the largest rectangular contour

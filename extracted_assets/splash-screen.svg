@@ -1,0 +1,85 @@
+<svg width="400" height="800" viewBox="0 0 400 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0A0A1A"/>
+      <stop offset="60%" stop-color="#0B0B2A"/>
+      <stop offset="100%" stop-color="#08081E"/>
+    </linearGradient>
+    <radialGradient id="planet" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#87CEEB"/>
+      <stop offset="100%" stop-color="#4A90E2"/>
+    </radialGradient>
+    <radialGradient id="moon" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#F5F5F5"/>
+      <stop offset="100%" stop-color="#D3D3D3"/>
+    </radialGradient>
+    <linearGradient id="ufo" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2C2C2C"/>
+      <stop offset="50%" stop-color="#404040"/>
+      <stop offset="100%" stop-color="#1A1A1A"/>
+    </linearGradient>
+    <radialGradient id="ufoDome" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#87CEEB"/>
+      <stop offset="100%" stop-color="#4A90E2"/>
+    </radialGradient>
+    <symbol id="star">
+      <circle r="1" fill="#FFFFFF" opacity="0.7"/>
+    </symbol>
+  </defs>
+  <rect width="400" height="800" fill="url(#bg)"/>
+  <g opacity="0.6">
+    <use href="#star" x="36" y="72"/>
+    <use href="#star" x="110" y="96" transform="scale(1.2)"/>
+    <use href="#star" x="312" y="88" />
+    <use href="#star" x="360" y="160" transform="scale(0.9)"/>
+    <use href="#star" x="64" y="200"/>
+    <use href="#star" x="192" y="150" transform="scale(1.1)"/>
+    <use href="#star" x="300" y="240"/>
+    <use href="#star" x="80" y="320"/>
+    <use href="#star" x="340" y="360"/>
+    <use href="#star" x="220" y="420"/>
+    <use href="#star" x="70" y="520"/>
+    <use href="#star" x="300" y="580"/>
+    <use href="#star" x="180" y="740"/>
+  </g>
+  <g transform="translate(60, 650)">
+    <circle cx="0" cy="0" r="25" fill="url(#planet)"/>
+    <circle cx="-6" cy="-6" r="5" fill="#4A90E2" opacity="0.6"/>
+    <circle cx="8" cy="4" r="3" fill="#4A90E2" opacity="0.4"/>
+  </g>
+  <g transform="translate(280, 100)">
+    <circle cx="0" cy="0" r="18" fill="url(#moon)"/>
+    <circle cx="-4" cy="-4" r="3" fill="#E0E0E0" opacity="0.6"/>
+    <circle cx="6" cy="2" r="2" fill="#E0E0E0" opacity="0.4"/>
+  </g>
+  <g>
+    <rect x="25" y="60" width="35" height="680" fill="#2C2C2C" rx="8"/>
+    <rect x="30" y="70" width="25" height="660" fill="#1A1A1A" rx="6"/>
+    <rect x="35" y="80" width="15" height="640" fill="#404040" rx="4"/>
+    <rect x="340" y="60" width="35" height="680" fill="#2C2C2C" rx="8"/>
+    <rect x="345" y="70" width="25" height="660" fill="#1A1A1A" rx="6"/>
+    <rect x="350" y="80" width="15" height="640" fill="#404040" rx="4"/>
+  </g>
+  <g transform="translate(280, 180)">
+    <path d="M0,0 L-50,35" stroke="#4A90E2" stroke-width="2" opacity="0.8"/>
+    <path d="M0,0 L-40,30" stroke="#87CEEB" stroke-width="1" opacity="0.9"/>
+  </g>
+  <g transform="translate(200, 160)" text-anchor="middle" font-family="Arial, sans-serif">
+    <text y="0" font-size="40" font-weight="bold" fill="#FFFFFF">COSMIC</text>
+    <text y="45" font-size="40" font-weight="bold" fill="#FFFFFF">DASH</text>
+    <text y="75" font-size="14" fill="#BFC7D6" opacity="0.85">Space Adventure</text>
+  </g>
+  <g transform="translate(200, 480)">
+    <ellipse cx="0" cy="0" rx="35" ry="11" fill="url(#ufo)"/>
+    <ellipse cx="0" cy="0" rx="30" ry="9" fill="#1A1A1A" opacity="0.8"/>
+    <ellipse cx="0" cy="-6" rx="22" ry="9" fill="url(#ufoDome)"/>
+    <ellipse cx="0" cy="-6" rx="18" ry="7" fill="#4A90E2" opacity="0.6"/>
+    <ellipse cx="-12" cy="0" rx="3" ry="1.5" fill="#FFD700"/>
+    <ellipse cx="12" cy="0" rx="3" ry="1.5" fill="#FFD700"/>
+    <ellipse cx="0" cy="4" rx="2" ry="1" fill="#FFD700"/>
+    <ellipse cx="0" cy="12" rx="25" ry="9" fill="#FF6B35" opacity="0.8"/>
+    <ellipse cx="0" cy="15" rx="18" ry="7" fill="#FFD700" opacity="0.9"/>
+    <ellipse cx="0" cy="18" rx="9" ry="4" fill="#FFFFFF" opacity="0.7"/>
+    <ellipse cx="0" cy="0" rx="42" ry="18" fill="#87CEEB" opacity="0.1"/>
+  </g>
+</svg>
