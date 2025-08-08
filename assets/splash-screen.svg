@@ -30,23 +30,44 @@
     <use href="#star" x="180" y="740"/>
   </g>
 
-  <!-- Rocket with vertical trail -->
+  <!-- Rocket with vertical trail - matching game design -->
   <g transform="translate(200,420)">
     <!-- trail -->
     <path d="M0,20 L0,140" stroke="#FF7A3C" stroke-width="10" stroke-linecap="round" opacity="0.45" filter="url(#glow)"/>
     <path d="M0,20 L0,120" stroke="#FFD25A" stroke-width="4" stroke-linecap="round" opacity="0.9" filter="url(#glow)"/>
 
-    <!-- rocket -->
+    <!-- rocket matching game design -->
     <g>
+      <!-- Rocket glow -->
       <ellipse cx="0" cy="-6" rx="28" ry="14" fill="#8FCBFF" opacity="0.35" filter="url(#glow)"/>
-      <path d="M-22,-42 L22,-42 L28,34 L-28,34 Z" fill="#3F87E6" stroke="#2E66B7" stroke-width="3"/>
-      <path d="M-18,-32 L18,-32 L24,26 L-24,26 Z" fill="#2E66B7" opacity="0.9"/>
-      <ellipse cx="0" cy="-20" rx="10" ry="7" fill="#9ED8FF" stroke="#FFFFFF" stroke-width="1.5"/>
-      <ellipse cx="2" cy="-22" rx="5" ry="3" fill="#FFFFFF" opacity="0.7"/>
-      <path d="M-24,26 L-36,46 L-8,30 Z" fill="#234D7E"/>
-      <path d="M24,26 L36,46 L8,30 Z" fill="#234D7E"/>
-      <path d="M-8,34 L0,52 L8,34 Z" fill="#FF7A3C" stroke="#FFA24C" stroke-width="1"/>
-      <path d="M-6,34 L0,70 L6,34 Z" fill="#FFD25A" opacity="0.95" filter="url(#glow)"/>
+      
+      <!-- Rocket body (30x24 like in game) -->
+      <ellipse cx="0" cy="0" rx="15" ry="12" fill="#4A90E2" stroke="#357ABD" stroke-width="2"/>
+      <ellipse cx="0" cy="0" rx="13" ry="10" fill="#357ABD" opacity="0.8"/>
+      
+      <!-- Cockpit (16x12 like in game) -->
+      <ellipse cx="0" cy="-4" rx="8" ry="6" fill="#87CEEB" stroke="#FFFFFF" stroke-width="1"/>
+      <ellipse cx="0" cy="-4" rx="5" ry="3" fill="#FFFFFF" opacity="0.7"/>
+      
+      <!-- Wings (42x8 like in game) -->
+      <rect x="-10.5" y="-2" width="21" height="4" fill="#2E5C8A" rx="2"/>
+      <rect x="-14.5" y="-2" width="4" height="4" fill="#1E3A5F" rx="1"/>
+      <rect x="10.5" y="-2" width="4" height="4" fill="#1E3A5F" rx="1"/>
+      
+      <!-- Engine (12x10 like in game) -->
+      <ellipse cx="0" cy="8.5" rx="6" ry="5" fill="#FF6B35"/>
+      <ellipse cx="0" cy="8.5" rx="4" ry="3" fill="#FF6B35" opacity="0.8"/>
+      
+      <!-- Side panels (4x12 like in game) -->
+      <rect x="-17" y="-3" width="2" height="6" fill="#357ABD" rx="1"/>
+      <rect x="15" y="-3" width="2" height="6" fill="#357ABD" rx="1"/>
+      
+      <!-- Nose cone (8x8 like in game) -->
+      <ellipse cx="0" cy="-10" rx="4" ry="4" fill="#FFD700"/>
+      
+      <!-- Engine flame -->
+      <path d="M -3,13.5 L 0,25 L 3,13.5 Z" fill="#FFD700" opacity="0.9" filter="url(#glow)"/>
+      <path d="M -2,13.5 L 0,22 L 2,13.5 Z" fill="#FF6B35" opacity="0.8"/>
     </g>
   </g>
 </svg> 
