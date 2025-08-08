@@ -4,15 +4,15 @@
     "slug": "space-drop",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/app-icon.png",
+    "icon": "./assets/icon.jpg",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#0A0A1A",
       "dark": {
-        "image": "./assets/splash-icon.png",
+        "image": "./assets/splash.png",
         "resizeMode": "cover",
         "backgroundColor": "#0A0A1A"
       }
