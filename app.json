@@ -9,11 +9,11 @@
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-screen.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#0A0A1A",
       "dark": {
         "image": "./assets/splash-screen.png",
-        "resizeMode": "contain",
+        "resizeMode": "cover",
         "backgroundColor": "#0A0A1A"
       }
     },
