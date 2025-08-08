@@ -102,7 +102,7 @@ interface FlightSimulatorProps {
 export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
   onGameOver,
 }) => {
-  const { settings, addScore, setGameMode, setPaused } = useGameStore();
+  const { settings, addScore, setGameMode, setPaused, isPaused } = useGameStore();
   const [gameplayState, setGameplayState] = useState<GameplayState>({
     rocket: {
       position: { x: 100, y: height / 2 },
@@ -165,7 +165,7 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
 
   // Simple Flappy Bird game loop
   const gameLoop = useCallback(() => {
-            if (!gameplayState.gameOver) {
+            if (!gameplayState.gameOver && !isPaused) {
       const now = Date.now();
       lastUpdateRef.current = now;
 
@@ -355,7 +355,7 @@ export const FlightSimulator: React.FC<FlightSimulatorProps> = ({
   }, [gameLoop, gameplayState.gameOver]);
 
   const jump = () => {
-    if (gameplayState.gameOver) return;
+    if (gameplayState.gameOver || isPaused) return;
     
     // Play click sound
       if (settings.soundEnabled) {

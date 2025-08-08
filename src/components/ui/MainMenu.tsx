@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { playClick, setAudioEnabled } from '../../utils/audio';
@@ -15,10 +15,6 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
   const { settings, stats, setGameMode } = useGameStore();
   const [audioReady, setAudioReady] = useState(false);
   const insets = useSafeAreaInsets();
-  
-  // UFO animation for falling effect
-  const ufoPosition = useRef(new Animated.Value(height / 2 - 50)).current;
-  const ufoRotation = useRef(new Animated.Value(0.3)).current; // Slight downward tilt
 
   useEffect(() => {
     setAudioEnabled(settings.soundEnabled).then(() => setAudioReady(true));
@@ -26,10 +22,10 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
 
   const handleQuickPlay = async () => {
     if (settings.soundEnabled && audioReady) {
-      // Play click sound with smooth transition
+      // Play click sound
       await playClick();
       
-      // Add a small delay for smooth audio transition like Flappy Bird
+      // Small delay for smooth transition
       setTimeout(() => {
         onStartGame();
       }, 150);
@@ -91,22 +87,9 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
           <Text style={styles.gameSubtitle}>Space Adventure</Text>
         </View>
 
-        {/* Centered UFO - Falling like paused game */}
+        {/* Centered UFO - Tilted like falling */}
         <View style={styles.ufoContainer}>
-          <Animated.View 
-            style={[
-              styles.spaceship,
-              {
-                transform: [
-                  { translateY: ufoPosition },
-                  { rotate: ufoRotation.interpolate({
-                    inputRange: [-1, 1],
-                    outputRange: ['-1rad', '1rad']
-                  })}
-                ]
-              }
-            ]}
-          >
+          <View style={[styles.spaceship, { transform: [{ rotate: '0.2rad' }] }]}>
             {/* Main Body */}
             <View style={styles.spaceshipBody}>
               {/* Cockpit with glow */}
@@ -134,7 +117,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
               {/* Nose cone */}
               <View style={styles.noseCone} />
             </View>
-          </Animated.View>
+          </View>
         </View>
 
         {/* High Score - Bottom */}

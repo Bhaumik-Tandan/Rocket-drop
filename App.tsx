@@ -20,7 +20,7 @@ console.warn = (...args) => {
 };
 
 export default function App() {
-  const { gameMode, settings, endSession, setGameMode } = useGameStore();
+  const { gameMode, settings, endSession, setGameMode, setPaused } = useGameStore();
 
   // Ensure audio mode follows settings
   useEffect(() => {
@@ -30,8 +30,7 @@ export default function App() {
   const handleStartGame = async () => {
     // Start the game session
     setGameMode('playing');
-    
-
+    setPaused(false);
     
     // Haptic feedback
     if (settings.hapticsEnabled) {
@@ -67,7 +66,7 @@ export default function App() {
     );
   }
 
-  // Game is playing
+  // Game is playing (either active or paused)
   return (
     <SafeAreaProvider>
       <View style={styles.container}>
