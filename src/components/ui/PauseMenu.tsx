@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useGameStore } from '../../store/gameStore';
+import { getResponsiveDimensions } from '../../utils/responsive';
 
 export const PauseMenu: React.FC = () => {
   const { gameMode, isPaused, settings, stats, setGameMode, setPaused } = useGameStore();
   const [menuScale] = useState(new Animated.Value(0.8));
   const [menuOpacity] = useState(new Animated.Value(0));
+  const dims = getResponsiveDimensions();
 
   useEffect(() => {
     if (isPaused) {
@@ -68,53 +70,164 @@ export const PauseMenu: React.FC = () => {
 
   return (
     <Animated.View style={[styles.overlay, { opacity: menuOpacity }]}>
-      <Animated.View style={[styles.menu, { transform: [{ scale: menuScale }] }]}>
-        <Text style={styles.title}>PAUSED</Text>
+      <Animated.View style={[styles.menu, { transform: [{ scale: menuScale }], paddingVertical: dims.padding }]}>
+        <Text style={[styles.title, { fontSize: dims.titleSize }]}>PAUSED</Text>
         
         {/* UFO Display */}
         <View style={styles.ufoContainer}>
-          <View style={styles.spaceship}>
-            <View style={styles.spaceshipBody}>
-              <View style={styles.spaceshipCockpit}>
-                <View style={styles.cockpitGlow} />
-                <View style={styles.cockpitWindow} />
+          <View style={[styles.spaceship, { 
+            width: dims.rocketSize, 
+            height: dims.rocketSize,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }]}>
+            <View style={[styles.spaceshipBody, {
+              width: dims.rocketSize,
+              height: dims.rocketSize * 0.8,
+              borderRadius: dims.rocketSize / 2,
+              backgroundColor: '#4A90E2',
+              borderWidth: 2,
+              borderColor: '#357ABD',
+              shadowColor: '#000000',
+              shadowOffset: { width: 0, height: 3 },
+              shadowOpacity: 0.4,
+              shadowRadius: 6,
+              elevation: 6,
+            }]}>
+              <View style={[styles.spaceshipCockpit, {
+                top: dims.rocketSize * 0.1,
+                left: dims.rocketSize * 0.5 - dims.rocketSize * 0.2,
+                width: dims.rocketSize * 0.4,
+                height: dims.rocketSize * 0.3,
+                borderRadius: dims.rocketSize * 0.2,
+              }]}>
+                <View style={[styles.cockpitGlow, {
+                  top: -dims.rocketSize * 0.05,
+                  left: -dims.rocketSize * 0.05,
+                  right: -dims.rocketSize * 0.05,
+                  bottom: -dims.rocketSize * 0.05,
+                  borderRadius: dims.rocketSize * 0.25,
+                }]} />
+                <View style={[styles.cockpitWindow, {
+                  top: dims.rocketSize * 0.1,
+                  left: dims.rocketSize * 0.1,
+                  width: dims.rocketSize * 0.2,
+                  height: dims.rocketSize * 0.15,
+                  borderRadius: dims.rocketSize * 0.1,
+                }]} />
               </View>
-              <View style={styles.spaceshipWings}>
-                <View style={styles.wingLeft} />
-                <View style={styles.wingRight} />
+              <View style={[styles.spaceshipWings, {
+                position: 'absolute',
+                top: dims.rocketSize * 0.25,
+                left: -dims.rocketSize * 0.2,
+                width: dims.rocketSize * 1.4,
+                height: dims.rocketSize * 0.27,
+                backgroundColor: '#2E5C8A',
+                borderRadius: dims.rocketSize * 0.13,
+              }]}>
+                <View style={[styles.wingLeft, {
+                  position: 'absolute',
+                  left: -dims.rocketSize * 0.27,
+                  top: 0,
+                  width: dims.rocketSize * 0.27,
+                  height: dims.rocketSize * 0.27,
+                  backgroundColor: '#1E3A5F',
+                  borderRadius: dims.rocketSize * 0.07,
+                }]} />
+                <View style={[styles.wingRight, {
+                  position: 'absolute',
+                  right: -dims.rocketSize * 0.27,
+                  top: 0,
+                  width: dims.rocketSize * 0.27,
+                  height: dims.rocketSize * 0.27,
+                  backgroundColor: '#1E3A5F',
+                  borderRadius: dims.rocketSize * 0.07,
+                }]} />
               </View>
-              <View style={styles.spaceshipEngine}>
-                <View style={styles.engineGlow} />
-                <View style={styles.thrustEffect} />
+              <View style={[styles.spaceshipEngine, {
+                position: 'absolute',
+                bottom: -dims.rocketSize * 0.2,
+                left: dims.rocketSize * 0.5 - dims.rocketSize * 0.2,
+                width: dims.rocketSize * 0.4,
+                height: dims.rocketSize * 0.33,
+                borderRadius: dims.rocketSize * 0.2,
+                backgroundColor: '#FF6B35',
+                shadowColor: '#FF6B35',
+                shadowOpacity: 0.8,
+                shadowRadius: 4,
+              }]}>
+                <View style={[styles.engineGlow, {
+                  top: -dims.rocketSize * 0.07,
+                  left: -dims.rocketSize * 0.07,
+                  right: -dims.rocketSize * 0.07,
+                  bottom: -dims.rocketSize * 0.07,
+                  borderRadius: dims.rocketSize * 0.27,
+                  backgroundColor: 'rgba(255, 107, 53, 0.4)',
+                }]} />
+                <View style={[styles.thrustEffect, {
+                  position: 'absolute',
+                  bottom: -dims.rocketSize * 0.27,
+                  left: dims.rocketSize * 0.07,
+                  width: dims.rocketSize * 0.27,
+                  height: dims.rocketSize * 0.2,
+                  backgroundColor: '#FFD700',
+                  borderRadius: dims.rocketSize * 0.1,
+                  opacity: 0.8,
+                }]} />
               </View>
-              <View style={styles.sidePanelLeft} />
-              <View style={styles.sidePanelRight} />
-              <View style={styles.noseCone} />
+              <View style={[styles.sidePanelLeft, {
+                position: 'absolute',
+                left: -dims.rocketSize * 0.07,
+                top: dims.rocketSize * 0.3,
+                width: dims.rocketSize * 0.13,
+                height: dims.rocketSize * 0.4,
+                backgroundColor: '#357ABD',
+                borderRadius: dims.rocketSize * 0.07,
+              }]} />
+              <View style={[styles.sidePanelRight, {
+                position: 'absolute',
+                right: -dims.rocketSize * 0.07,
+                top: dims.rocketSize * 0.3,
+                width: dims.rocketSize * 0.13,
+                height: dims.rocketSize * 0.4,
+                backgroundColor: '#357ABD',
+                borderRadius: dims.rocketSize * 0.07,
+              }]} />
+              <View style={[styles.noseCone, {
+                position: 'absolute',
+                top: -dims.rocketSize * 0.13,
+                left: dims.rocketSize * 0.5 - dims.rocketSize * 0.13,
+                width: dims.rocketSize * 0.27,
+                height: dims.rocketSize * 0.27,
+                backgroundColor: '#FFD700',
+                borderRadius: dims.rocketSize * 0.13,
+                transform: [{ rotate: '45deg' }],
+              }]} />
             </View>
           </View>
         </View>
         
         {/* Highest Score Display */}
-        <View style={styles.scoreContainer}>
-          <Text style={styles.scoreLabel}>HIGHEST SCORE</Text>
-          <Text style={styles.scoreValue}>{stats.bestScore}</Text>
+        <View style={[styles.scoreContainer, { paddingVertical: dims.isTablet ? 20 : 16, paddingHorizontal: dims.isTablet ? 32 : 24 }]}>
+          <Text style={[styles.scoreLabel, { fontSize: dims.smallSize }]}>HIGHEST SCORE</Text>
+          <Text style={[styles.scoreValue, { fontSize: dims.isTablet ? 32 : 24 }]}>{stats.bestScore}</Text>
         </View>
         
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={handleResume}>
-            <Text style={styles.buttonText}>RESUME</Text>
+        <View style={[styles.buttonContainer, { gap: dims.isTablet ? 16 : 12 }]}>
+          <TouchableOpacity style={[styles.button, { paddingVertical: dims.isTablet ? 20 : 16, paddingHorizontal: dims.isTablet ? 32 : 24 }]} onPress={handleResume}>
+            <Text style={[styles.buttonText, { fontSize: dims.bodySize }]}>RESUME</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={handleSettings}>
-            <Text style={styles.buttonText}>SETTINGS</Text>
+          <TouchableOpacity style={[styles.button, { paddingVertical: dims.isTablet ? 20 : 16, paddingHorizontal: dims.isTablet ? 32 : 24 }]} onPress={handleSettings}>
+            <Text style={[styles.buttonText, { fontSize: dims.bodySize }]}>SETTINGS</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.button, styles.quitButton]} onPress={handleQuit}>
-            <Text style={styles.buttonText}>QUIT TO MENU</Text>
+          <TouchableOpacity style={[styles.button, styles.quitButton, { paddingVertical: dims.isTablet ? 20 : 16, paddingHorizontal: dims.isTablet ? 32 : 24 }]} onPress={handleQuit}>
+            <Text style={[styles.buttonText, { fontSize: dims.bodySize }]}>QUIT TO MENU</Text>
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.hint}>Double tap to pause/resume</Text>
+        <Text style={[styles.hint, { fontSize: dims.smallSize, marginTop: dims.isTablet ? 32 : 24 }]}>Double tap to pause/resume</Text>
       </Animated.View>
     </Animated.View>
   );
@@ -134,12 +247,12 @@ const styles = StyleSheet.create({
   },
   menu: {
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    padding: 32,
     borderRadius: 20,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.1)',
     alignItems: 'center',
     minWidth: 280,
+    paddingHorizontal: 32,
     // backdropFilter: 'blur(20px)', // Not supported in React Native
   },
   title: {

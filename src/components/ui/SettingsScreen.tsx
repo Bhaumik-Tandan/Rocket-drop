@@ -1,9 +1,11 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Switch } from 'react-native';
 import { useGameStore } from '../../store/gameStore';
+import { getResponsiveDimensions } from '../../utils/responsive';
 
 export const SettingsScreen: React.FC = () => {
   const { settings, setGameMode, updateSettings } = useGameStore();
+  const dims = getResponsiveDimensions();
 
   const handleBack = () => {
     setGameMode('menu');
@@ -20,24 +22,24 @@ export const SettingsScreen: React.FC = () => {
   // Removed difficulty and graphics settings - keeping it simple
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingVertical: dims.padding }]}>
       {/* Transparent overlay background */}
       <View style={styles.overlay} />
       
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-          <Text style={styles.backButtonText}>← BACK</Text>
+      <View style={[styles.header, { marginTop: dims.isTablet ? 80 : 60, marginBottom: dims.isTablet ? 60 : 40 }]}>
+        <TouchableOpacity style={[styles.backButton, { paddingHorizontal: dims.padding, paddingVertical: dims.isTablet ? 16 : 12 }]} onPress={handleBack}>
+          <Text style={[styles.backButtonText, { fontSize: dims.bodySize }]}>← BACK</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>SETTINGS</Text>
+        <Text style={[styles.title, { fontSize: dims.titleSize }]}>SETTINGS</Text>
       </View>
 
       <View style={styles.settingsContainer}>
         {/* Audio Settings */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>AUDIO</Text>
+        <View style={[styles.section, { marginBottom: dims.isTablet ? 40 : 30 }]}>
+          <Text style={[styles.sectionTitle, { fontSize: dims.subtitleSize }]}>AUDIO</Text>
           
-          <View style={styles.settingRow}>
-            <Text style={styles.settingLabel}>Sound Effects</Text>
+          <View style={[styles.settingRow, { paddingVertical: dims.isTablet ? 16 : 12 }]}>
+            <Text style={[styles.settingLabel, { fontSize: dims.bodySize }]}>Sound Effects</Text>
             <Switch
               value={settings.soundEnabled}
               onValueChange={toggleSound}
@@ -46,8 +48,8 @@ export const SettingsScreen: React.FC = () => {
             />
           </View>
 
-          <View style={styles.settingRow}>
-            <Text style={styles.settingLabel}>Vibrations</Text>
+          <View style={[styles.settingRow, { paddingVertical: dims.isTablet ? 16 : 12 }]}>
+            <Text style={[styles.settingLabel, { fontSize: dims.bodySize }]}>Vibrations</Text>
             <Switch
               value={settings.hapticsEnabled}
               onValueChange={toggleHaptics}
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'transparent',
-    padding: 20,
+    paddingVertical: 20,
   },
   overlay: {
     position: 'absolute',

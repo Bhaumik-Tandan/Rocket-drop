@@ -19,7 +19,9 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.bhaumik.tandan.spacedrop"
+      "bundleIdentifier": "com.bhaumik.tandan.spacedrop",
+      "requireFullScreen": false,
+      "userInterfaceStyle": "dark"
     },
     "android": {
       "adaptiveIcon": {

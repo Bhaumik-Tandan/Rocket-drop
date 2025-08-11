@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { getResponsiveDimensions } from '../../utils/responsive';
 
 interface HUDProps {
   score: number;
@@ -18,6 +19,9 @@ export const HUD: React.FC<HUDProps> = ({
   boost,
   shield,
 }) => {
+  const dims = getResponsiveDimensions();
+  
+
   const formatTime = (ms: number) => {
     const seconds = Math.ceil(ms / 1000);
     const minutes = Math.floor(seconds / 60);
@@ -28,44 +32,44 @@ export const HUD: React.FC<HUDProps> = ({
   return (
     <View style={styles.container}>
       {/* Top HUD */}
-      <View style={styles.topHUD}>
-        <View style={styles.hudBox}>
-          <Text style={styles.label}>SCORE</Text>
-          <Text style={[styles.value, { color: '#FFD700' }]}>{score}</Text>
+      <View style={[styles.topHUD, { padding: dims.hudPadding, paddingTop: dims.hudTopPadding }]}>
+        <View style={[styles.hudBox, { padding: dims.isTablet ? 16 : 12, minWidth: dims.isTablet ? 100 : 70 }]}>
+          <Text style={[styles.label, { fontSize: dims.smallSize }]}>SCORE</Text>
+          <Text style={[styles.value, { color: '#FFD700', fontSize: dims.isTablet ? 20 : 14 }]}>{score}</Text>
         </View>
 
-        <View style={styles.hudBox}>
-          <Text style={styles.label}>DISTANCE</Text>
-          <Text style={styles.value}>{Math.floor(distance)}</Text>
+        <View style={[styles.hudBox, { padding: dims.isTablet ? 16 : 12, minWidth: dims.isTablet ? 100 : 70 }]}>
+          <Text style={[styles.label, { fontSize: dims.smallSize }]}>DISTANCE</Text>
+          <Text style={[styles.value, { fontSize: dims.isTablet ? 20 : 14 }]}>{Math.floor(distance)}</Text>
         </View>
 
-        <View style={styles.hudBox}>
-          <Text style={styles.label}>TIME</Text>
-          <Text style={styles.value}>{formatTime(timeElapsed)}</Text>
+        <View style={[styles.hudBox, { padding: dims.isTablet ? 16 : 12, minWidth: dims.isTablet ? 100 : 70 }]}>
+          <Text style={[styles.label, { fontSize: dims.smallSize }]}>TIME</Text>
+          <Text style={[styles.value, { fontSize: dims.isTablet ? 20 : 14 }]}>{formatTime(timeElapsed)}</Text>
         </View>
       </View>
 
       {/* Power-up indicators */}
-      <View style={styles.powerUpHUD}>
+      <View style={[styles.powerUpHUD, { right: dims.hudPadding, top: dims.isTablet ? 160 : 120 }]}>
         {combo > 1 && (
-          <View style={styles.comboBox}>
-            <Text style={styles.comboText}>COMBO x{combo}</Text>
+          <View style={[styles.comboBox, { paddingHorizontal: dims.isTablet ? 16 : 12, paddingVertical: dims.isTablet ? 8 : 6 }]}>
+            <Text style={[styles.comboText, { fontSize: dims.isTablet ? 16 : 12 }]}>COMBO x{combo}</Text>
           </View>
         )}
         
         {boost > 0 && (
-          <View style={styles.boostBox}>
-            <Text style={styles.powerUpText}>🔥 BOOST</Text>
-            <View style={styles.powerUpBar}>
+          <View style={[styles.boostBox, { padding: dims.isTablet ? 12 : 8, minWidth: dims.isTablet ? 120 : 80 }]}>
+            <Text style={[styles.powerUpText, { fontSize: dims.isTablet ? 14 : 10 }]}>🔥 BOOST</Text>
+            <View style={[styles.powerUpBar, { width: dims.isTablet ? 80 : 60, height: dims.isTablet ? 6 : 4 }]}>
               <View style={[styles.powerUpFill, { width: `${(boost / 180) * 100}%`, backgroundColor: '#FF4500' }]} />
             </View>
           </View>
         )}
         
         {shield > 0 && (
-          <View style={styles.shieldBox}>
-            <Text style={styles.powerUpText}>🛡️ SHIELD</Text>
-            <View style={styles.powerUpBar}>
+          <View style={[styles.shieldBox, { padding: dims.isTablet ? 12 : 8, minWidth: dims.isTablet ? 120 : 80 }]}>
+            <Text style={[styles.powerUpText, { fontSize: dims.isTablet ? 14 : 10 }]}>🛡️ SHIELD</Text>
+            <View style={[styles.powerUpBar, { width: dims.isTablet ? 80 : 60, height: dims.isTablet ? 6 : 4 }]}>
               <View style={[styles.powerUpFill, { width: `${(shield / 300) * 100}%`, backgroundColor: '#00FF00' }]} />
             </View>
           </View>
@@ -73,8 +77,8 @@ export const HUD: React.FC<HUDProps> = ({
       </View>
 
       {/* Bottom HUD */}
-      <View style={styles.bottomHUD}>
-        <Text style={styles.hint}>Tap to thrust • Long press to pause</Text>
+      <View style={[styles.bottomHUD, { bottom: dims.isTablet ? 80 : 60 }]}>
+        <Text style={[styles.hint, { fontSize: dims.isTablet ? 16 : 12 }]}>Tap to thrust • Long press to pause</Text>
       </View>
     </View>
   );
@@ -192,4 +196,5 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     fontWeight: '300',
   },
+
 }); 

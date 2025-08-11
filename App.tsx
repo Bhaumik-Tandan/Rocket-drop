@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Text, TouchableOpacity, Modal } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Modal, Dimensions } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { useGameStore } from './src/store/gameStore';
@@ -9,6 +9,7 @@ import { PauseMenu } from './src/components/ui/PauseMenu';
 import { SettingsScreen } from './src/components/ui/SettingsScreen';
 import { FlightSimulator } from './src/components/game/FlightSimulator';
 import { setAudioEnabled } from './src/utils/audio';
+import { getResponsiveDimensions } from './src/utils/responsive';
 
 // Suppress expo-av deprecation warning
 const originalWarn = console.warn;
@@ -21,6 +22,7 @@ console.warn = (...args) => {
 
 export default function App() {
   const { gameMode, settings, endSession, setGameMode, setPaused } = useGameStore();
+  const dims = getResponsiveDimensions();
 
   // Ensure audio mode follows settings
   useEffect(() => {
@@ -81,5 +83,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#0B0B2A',
+    width: '100%',
+    height: '100%',
   },
 }); 

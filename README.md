@@ -118,9 +118,16 @@ A simple, fun space flying game where you navigate through cosmic obstacles. Per
 
 ## 📱 Platform Support
 
-- **iOS** - iPhone and iPad
+- **iOS** - iPhone and iPad (optimized for both)
 - **Android** - Phones and tablets
 - **Web** - Browser support (experimental)
+
+### 🍎 iPad Optimization
+- **Responsive design** that adapts to iPad screen sizes
+- **Larger UI elements** for better touch interaction
+- **Optimized game elements** (rocket size, pipe gaps, etc.)
+- **Enhanced spacing** and typography for tablet screens
+- **Full screen support** with proper safe area handling
 
 ## 🚀 Future Enhancements
 

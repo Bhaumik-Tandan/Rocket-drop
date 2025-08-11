@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { playClick, setAudioEnabled } from '../../utils/audio';
 import { useGameStore } from '../../store/gameStore';
+import { getResponsiveDimensions } from '../../utils/responsive';
 
 const { width, height } = Dimensions.get('window');
 
@@ -15,12 +16,17 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
   const { settings, stats, setGameMode } = useGameStore();
   const [audioReady, setAudioReady] = useState(false);
   const insets = useSafeAreaInsets();
+  const dims = getResponsiveDimensions();
+  
+
 
   useEffect(() => {
     setAudioEnabled(settings.soundEnabled).then(() => setAudioReady(true));
   }, [settings.soundEnabled]);
 
   const handleQuickPlay = async () => {
+    console.log('🎮 Tap detected - starting game!');
+    
     if (settings.soundEnabled && audioReady) {
       // Play click sound
       await playClick();
@@ -67,61 +73,205 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
 
       {/* Settings Button */}
       <TouchableOpacity 
-        style={[styles.settingsButton, { top: insets.top + 10, right: 20 }]} 
+        style={[
+          styles.settingsButton, 
+          { 
+            top: insets.top + (dims.isTablet ? 20 : 10), 
+            right: dims.padding,
+            width: dims.buttonSize,
+            height: dims.buttonSize,
+            borderRadius: dims.buttonSize / 2,
+            zIndex: 101,
+          }
+        ]} 
         onPress={handleSettings} 
         activeOpacity={0.7}
       >
-        <Text style={styles.settingsButtonText}>⚙️</Text>
+        <Text style={[styles.settingsButtonText, { fontSize: dims.iconSize }]}>⚙️</Text>
       </TouchableOpacity>
 
       {/* Main Content - Centered like Flappy Bird */}
-      <View style={styles.content}>
+      <View style={[
+        styles.content, 
+        { 
+          paddingTop: dims.isTablet ? 80 : 40, 
+          paddingBottom: dims.isTablet ? 80 : 40,
+          width: '100%',
+        }
+      ]}>
         {/* Title Section */}
         <View style={styles.titleSection}>
-          <Text style={styles.gameTitle}>COSMIC DASH</Text>
-          <Text style={styles.gameSubtitle}>Space Adventure</Text>
+          <Text style={[styles.gameTitle, { fontSize: dims.titleSize }]}>COSMIC DASH</Text>
+          <Text style={[styles.gameSubtitle, { fontSize: dims.subtitleSize }]}>Space Adventure</Text>
         </View>
 
         {/* Centered UFO - Tilted like falling */}
         <View style={styles.ufoContainer}>
-          <View style={[styles.spaceship, { transform: [{ rotate: '0.2rad' }] }]}>
+          <View style={[
+            styles.spaceship, 
+            { 
+              transform: [{ rotate: '0.2rad' }],
+              width: dims.rocketSize,
+              height: dims.rocketSize,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }
+          ]}>
             {/* Main Body */}
-            <View style={styles.spaceshipBody}>
-              {/* Cockpit with glow */}
-              <View style={styles.spaceshipCockpit}>
-                <View style={styles.cockpitGlow} />
-                <View style={styles.cockpitWindow} />
-              </View>
+            <View style={[
+              styles.spaceshipBody,
+              {
+                width: dims.rocketSize,
+                height: dims.rocketSize * 0.8,
+                borderRadius: dims.rocketSize / 2,
+                backgroundColor: '#4A90E2',
+                borderWidth: 2,
+                borderColor: '#357ABD',
+                shadowColor: '#000000',
+                shadowOffset: { width: 0, height: 3 },
+                shadowOpacity: 0.4,
+                shadowRadius: 6,
+                elevation: 6,
+              }
+            ]}>
+                              {/* Cockpit with glow */}
+                <View style={[
+                  styles.spaceshipCockpit,
+                  {
+                    top: dims.rocketSize * 0.1,
+                    left: dims.rocketSize * 0.5 - dims.rocketSize * 0.2,
+                    width: dims.rocketSize * 0.4,
+                    height: dims.rocketSize * 0.3,
+                    borderRadius: dims.rocketSize * 0.2,
+                  }
+                ]}>
+                  <View style={[
+                    styles.cockpitGlow,
+                    {
+                      top: -dims.rocketSize * 0.05,
+                      left: -dims.rocketSize * 0.05,
+                      right: -dims.rocketSize * 0.05,
+                      bottom: -dims.rocketSize * 0.05,
+                      borderRadius: dims.rocketSize * 0.25,
+                    }
+                  ]} />
+                  <View style={[
+                    styles.cockpitWindow,
+                    {
+                      top: dims.rocketSize * 0.1,
+                      left: dims.rocketSize * 0.1,
+                      width: dims.rocketSize * 0.2,
+                      height: dims.rocketSize * 0.15,
+                      borderRadius: dims.rocketSize * 0.1,
+                    }
+                  ]} />
+                </View>
               
               {/* Wings */}
-              <View style={styles.spaceshipWings}>
-                <View style={styles.wingLeft} />
-                <View style={styles.wingRight} />
+              <View style={[styles.spaceshipWings, {
+                position: 'absolute',
+                top: dims.rocketSize * 0.25,
+                left: -dims.rocketSize * 0.2,
+                width: dims.rocketSize * 1.4,
+                height: dims.rocketSize * 0.27,
+                backgroundColor: '#2E5C8A',
+                borderRadius: dims.rocketSize * 0.13,
+              }]}>
+                <View style={[styles.wingLeft, {
+                  position: 'absolute',
+                  left: -dims.rocketSize * 0.27,
+                  top: 0,
+                  width: dims.rocketSize * 0.27,
+                  height: dims.rocketSize * 0.27,
+                  backgroundColor: '#1E3A5F',
+                  borderRadius: dims.rocketSize * 0.07,
+                }]} />
+                <View style={[styles.wingRight, {
+                  position: 'absolute',
+                  right: -dims.rocketSize * 0.27,
+                  top: 0,
+                  width: dims.rocketSize * 0.27,
+                  height: dims.rocketSize * 0.27,
+                  backgroundColor: '#1E3A5F',
+                  borderRadius: dims.rocketSize * 0.07,
+                }]} />
               </View>
               
               {/* Engine with thrust effect */}
-              <View style={styles.spaceshipEngine}>
-                <View style={styles.engineGlow} />
-                <View style={styles.thrustEffect} />
+              <View style={[styles.spaceshipEngine, {
+                position: 'absolute',
+                bottom: -dims.rocketSize * 0.2,
+                left: dims.rocketSize * 0.5 - dims.rocketSize * 0.2,
+                width: dims.rocketSize * 0.4,
+                height: dims.rocketSize * 0.33,
+                borderRadius: dims.rocketSize * 0.2,
+                backgroundColor: '#FF6B35',
+                shadowColor: '#FF6B35',
+                shadowOpacity: 0.8,
+                shadowRadius: 4,
+              }]}>
+                <View style={[styles.engineGlow, {
+                  top: -dims.rocketSize * 0.07,
+                  left: -dims.rocketSize * 0.07,
+                  right: -dims.rocketSize * 0.07,
+                  bottom: -dims.rocketSize * 0.07,
+                  borderRadius: dims.rocketSize * 0.27,
+                  backgroundColor: 'rgba(255, 107, 53, 0.4)',
+                }]} />
+                <View style={[styles.thrustEffect, {
+                  position: 'absolute',
+                  bottom: -dims.rocketSize * 0.27,
+                  left: dims.rocketSize * 0.07,
+                  width: dims.rocketSize * 0.27,
+                  height: dims.rocketSize * 0.2,
+                  backgroundColor: '#FFD700',
+                  borderRadius: dims.rocketSize * 0.1,
+                  opacity: 0.8,
+                }]} />
               </View>
               
               {/* Side panels */}
-              <View style={styles.sidePanelLeft} />
-              <View style={styles.sidePanelRight} />
+              <View style={[styles.sidePanelLeft, {
+                position: 'absolute',
+                left: -dims.rocketSize * 0.07,
+                top: dims.rocketSize * 0.3,
+                width: dims.rocketSize * 0.13,
+                height: dims.rocketSize * 0.4,
+                backgroundColor: '#357ABD',
+                borderRadius: dims.rocketSize * 0.07,
+              }]} />
+              <View style={[styles.sidePanelRight, {
+                position: 'absolute',
+                right: -dims.rocketSize * 0.07,
+                top: dims.rocketSize * 0.3,
+                width: dims.rocketSize * 0.13,
+                height: dims.rocketSize * 0.4,
+                backgroundColor: '#357ABD',
+                borderRadius: dims.rocketSize * 0.07,
+              }]} />
               
               {/* Nose cone */}
-              <View style={styles.noseCone} />
+              <View style={[styles.noseCone, {
+                position: 'absolute',
+                top: -dims.rocketSize * 0.13,
+                left: dims.rocketSize * 0.5 - dims.rocketSize * 0.13,
+                width: dims.rocketSize * 0.27,
+                height: dims.rocketSize * 0.27,
+                backgroundColor: '#FFD700',
+                borderRadius: dims.rocketSize * 0.13,
+                transform: [{ rotate: '45deg' }],
+              }]} />
             </View>
           </View>
           
           {/* Tap to Play Text */}
-          <Text style={styles.tapToPlayText}>TAP TO PLAY</Text>
+          <Text style={[styles.tapToPlayText, { fontSize: dims.bodySize }]}>TAP TO PLAY</Text>
         </View>
 
         {/* High Score - Bottom */}
-        <View style={styles.scoreSection}>
-          <Text style={styles.scoreLabel}>BEST SCORE</Text>
-          <Text style={styles.scoreValue}>{stats.bestScore}</Text>
+        <View style={[styles.scoreSection, { paddingVertical: dims.isTablet ? 16 : 12, paddingHorizontal: dims.isTablet ? 32 : 24 }]}>
+          <Text style={[styles.scoreLabel, { fontSize: dims.smallSize }]}>BEST SCORE</Text>
+          <Text style={[styles.scoreValue, { fontSize: dims.isTablet ? 36 : 24 }]}>{stats.bestScore}</Text>
         </View>
       </View>
 
@@ -139,6 +289,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#0B0B2A', // Match game background color
+    width: '100%',
+    height: '100%',
   },
   starsContainer: {
     position: 'absolute',
@@ -177,7 +329,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
     paddingTop: 40,
     paddingBottom: 40,
   },
@@ -374,7 +525,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: 'transparent',
-    zIndex: 5,
+    zIndex: 100,
   },
   tapToPlayText: {
     fontSize: 18,
@@ -383,4 +534,5 @@ const styles = StyleSheet.create({
     marginTop: 20,
     opacity: 0.7,
   },
+
 }); 
