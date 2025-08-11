@@ -33,7 +33,7 @@ async function ensureInitialized() {
     isInitialized = true;
   } catch (e) {
     // eslint-disable-next-line no-console
-    console.log('Audio init error:', e);
+    
   } finally {
     isLoading = false;
   }
@@ -54,7 +54,7 @@ export async function playClick() {
     await clickSound.replayAsync();
   } catch (e) {
     // eslint-disable-next-line no-console
-    console.log('playClick error:', e);
+    
   }
 }
 
@@ -66,7 +66,7 @@ export async function playPassed() {
     await passedSound.replayAsync();
   } catch (e) {
     // eslint-disable-next-line no-console
-    console.log('playPassed error:', e);
+    
   }
 }
 

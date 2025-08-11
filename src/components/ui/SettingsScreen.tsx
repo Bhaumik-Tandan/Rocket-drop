@@ -4,7 +4,7 @@ import { useGameStore } from '../../store/gameStore';
 import { getResponsiveDimensions } from '../../utils/responsive';
 
 export const SettingsScreen: React.FC = () => {
-  const { settings, setGameMode, updateSettings } = useGameStore();
+  const { gameMode, settings, setGameMode, updateSettings } = useGameStore();
   const dims = getResponsiveDimensions();
 
   const handleBack = () => {
@@ -12,67 +12,53 @@ export const SettingsScreen: React.FC = () => {
   };
 
   const toggleSound = (value: boolean) => {
-    updateSettings({ soundEnabled: value });
+    updateSettings({ ...settings, soundEnabled: value });
   };
 
   const toggleHaptics = (value: boolean) => {
-    updateSettings({ hapticsEnabled: value });
+    updateSettings({ ...settings, hapticsEnabled: value });
   };
 
-  // Removed difficulty and graphics settings - keeping it simple
+  if (gameMode !== 'settings') {
+    return null;
+  }
 
   return (
-    <View style={[styles.container, { paddingVertical: dims.padding }]}>
-      {/* Transparent overlay background */}
-      <View style={styles.overlay} />
-      
-      <View style={[styles.header, { marginTop: dims.isTablet ? 80 : 60, marginBottom: dims.isTablet ? 60 : 40 }]}>
-        <TouchableOpacity style={[styles.backButton, { paddingHorizontal: dims.padding, paddingVertical: dims.isTablet ? 16 : 12 }]} onPress={handleBack}>
-          <Text style={[styles.backButtonText, { fontSize: dims.bodySize }]}>← BACK</Text>
-        </TouchableOpacity>
+    <View style={styles.overlay}>
+      <View style={[styles.modal, { paddingVertical: dims.padding }]}>
         <Text style={[styles.title, { fontSize: dims.titleSize }]}>SETTINGS</Text>
-      </View>
-
-      <View style={styles.settingsContainer}>
-        {/* Audio Settings */}
-        <View style={[styles.section, { marginBottom: dims.isTablet ? 40 : 30 }]}>
-          <Text style={[styles.sectionTitle, { fontSize: dims.subtitleSize }]}>AUDIO</Text>
-          
-          <View style={[styles.settingRow, { paddingVertical: dims.isTablet ? 16 : 12 }]}>
-            <Text style={[styles.settingLabel, { fontSize: dims.bodySize }]}>Sound Effects</Text>
+        
+        <View style={[styles.settingsContainer, { gap: dims.isTablet ? 16 : 12 }]}>
+          <View style={[styles.settingRow, { paddingVertical: dims.isTablet ? 20 : 16, paddingHorizontal: dims.isTablet ? 32 : 24 }]}>
+            <Text style={[styles.settingLabel, { fontSize: dims.bodySize }]}>SOUND</Text>
             <Switch
               value={settings.soundEnabled}
               onValueChange={toggleSound}
-              trackColor={{ false: '#333333', true: '#00D4AA' }}
-              thumbColor={settings.soundEnabled ? '#FFFFFF' : '#888888'}
+              trackColor={{ false: 'rgba(255, 255, 255, 0.1)', true: 'rgba(74, 144, 226, 0.5)' }}
+              thumbColor={settings.soundEnabled ? '#4A90E2' : 'rgba(255, 255, 255, 0.3)'}
             />
           </View>
 
-          <View style={[styles.settingRow, { paddingVertical: dims.isTablet ? 16 : 12 }]}>
-            <Text style={[styles.settingLabel, { fontSize: dims.bodySize }]}>Vibrations</Text>
+          <View style={[styles.settingRow, { paddingVertical: dims.isTablet ? 20 : 16, paddingHorizontal: dims.isTablet ? 32 : 24 }]}>
+            <Text style={[styles.settingLabel, { fontSize: dims.bodySize }]}>HAPTICS</Text>
             <Switch
               value={settings.hapticsEnabled}
               onValueChange={toggleHaptics}
-              trackColor={{ false: '#333333', true: '#00D4AA' }}
-              thumbColor={settings.hapticsEnabled ? '#FFFFFF' : '#888888'}
+              trackColor={{ false: 'rgba(255, 255, 255, 0.1)', true: 'rgba(74, 144, 226, 0.5)' }}
+              thumbColor={settings.hapticsEnabled ? '#4A90E2' : 'rgba(255, 255, 255, 0.3)'}
             />
           </View>
         </View>
 
-        {/* Game Controls section removed */}
-
-
+        <TouchableOpacity style={[styles.backButton, { paddingVertical: dims.isTablet ? 20 : 16, paddingHorizontal: dims.isTablet ? 32 : 24 }]} onPress={handleBack}>
+          <Text style={[styles.backButtonText, { fontSize: dims.bodySize }]}>BACK</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'transparent',
-    paddingVertical: 20,
-  },
   overlay: {
     position: 'absolute',
     top: 0,
@@ -80,20 +66,62 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
-  },
-  header: {
-    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 60,
-    marginBottom: 40,
+    zIndex: 1000,
+  },
+  modal: {
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    alignItems: 'center',
+    minWidth: 280,
+    paddingHorizontal: 32,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '300',
+    color: '#FFFFFF',
+    marginBottom: 32,
+    textAlign: 'center',
+    letterSpacing: 4,
+  },
+  settingsContainer: {
+    gap: 12,
+    width: '100%',
+    marginBottom: 24,
+  },
+  settingRow: {
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  settingLabel: {
+    fontSize: 14,
+    fontWeight: '400',
+    color: '#FFFFFF',
+    letterSpacing: 1,
   },
   backButton: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
     borderRadius: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.15)',
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    alignItems: 'center',
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -101,64 +129,9 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   backButtonText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '500',
-    letterSpacing: 0.5,
-  },
-  title: {
-    fontSize: 26,
+    fontSize: 14,
     fontWeight: '400',
     color: '#FFFFFF',
-    marginLeft: 24,
-    letterSpacing: 2,
-  },
-  settingsContainer: {
-    flex: 1,
-  },
-  section: {
-    marginBottom: 40,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#00D4AA',
-    marginBottom: 20,
     letterSpacing: 1,
-  },
-  settingRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 18,
-    paddingHorizontal: 4,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.08)',
-  },
-  settingLabel: {
-    fontSize: 16,
-    color: '#FFFFFF',
-    fontWeight: '500',
-  },
-  infoCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    padding: 20,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-  },
-  infoTitle: {
-    fontSize: 18,
-    color: '#00D4AA',
-    fontWeight: '600',
-    marginBottom: 12,
-    textAlign: 'center',
-  },
-  infoText: {
-    fontSize: 14,
-    color: '#CCCCCC',
-    lineHeight: 20,
-    textAlign: 'center',
-    marginBottom: 6,
   },
 }); 

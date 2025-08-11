@@ -25,7 +25,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
   }, [settings.soundEnabled]);
 
   const handleQuickPlay = async () => {
-    console.log('🎮 Tap detected - starting game!');
+
     
     if (settings.soundEnabled && audioReady) {
       // Play click sound

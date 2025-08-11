@@ -22,7 +22,7 @@ const FlightSimulator: React.FC<FlightSimulatorProps> = ({ flightState, currentV
   const renderScene = (gl: any) => {
     // This would render the 3D aircraft and environment
     // For now, we'll show a placeholder
-    console.log('GL Context created:', gl);
+
   };
 
   return (

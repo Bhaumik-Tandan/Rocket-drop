@@ -98,26 +98,10 @@ export const debugResponsive = () => {
   const isIOS = Platform.OS === 'ios';
   const aspectRatio = width / height;
   
-  console.log('🔍 Responsive Debug Info:');
-  console.log('Screen dimensions:', { width, height });
-  console.log('Platform:', Platform.OS);
-  console.log('Is iOS:', isIOS);
-  console.log('Aspect ratio:', aspectRatio);
-  console.log('Is iPad detected:', dims.isTablet);
-  console.log('Scale factor:', dims.scaleFactor);
-  console.log('Title size:', dims.titleSize);
-  console.log('Padding:', dims.padding);
-  console.log('Rocket size:', dims.rocketSize);
+
   
   // Detailed iPad detection breakdown
-  console.log('📱 iPad Detection Breakdown:');
-  console.log('- Width >= 768:', width >= 768);
-  console.log('- Height >= 768:', height >= 768);
-  console.log('- Width >= 834:', width >= 834);
-  console.log('- Height >= 834:', height >= 834);
-  console.log('- Width >= 1024:', width >= 1024);
-  console.log('- Height >= 1024:', height >= 1024);
-  console.log('- Aspect ratio 0.75-1.33:', aspectRatio >= 0.75 && aspectRatio <= 1.33);
+
   
   return dims;
 }; 
