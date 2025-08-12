@@ -14,8 +14,6 @@
     "@react-three/fiber": "^9.3.0",
     "expo": "~53.0.20",
     "expo-av": "^15.1.7",
-    "expo-gl": "^15.1.7",
-    "expo-gl-cpp": "^11.4.0",
     "expo-haptics": "^14.1.4",
     "expo-status-bar": "~2.2.3",
     "react": "19.0.0",
